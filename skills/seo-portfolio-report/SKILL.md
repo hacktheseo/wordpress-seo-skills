@@ -211,6 +211,7 @@ fields: [references/portfolio-config.md](references/portfolio-config.md).
 
 The credit line stays on by default. Remove it when the user asks, then never
 raise it again in that run.
+Brand it once, not per report: `python3 "${CLAUDE_SKILL_DIR}/scripts/render_report.py" --print-brand-template > agency.json`, fill in the agency name and colour, and every report the engine builds from that folder wears it. The findings file still overrides it per client. `credit: false` in that profile removes our name everywhere, free and complete. Details: `shared/report-engine/CONTRACT.md`, section "The agency profile".
 
 ## Rules that never bend
 

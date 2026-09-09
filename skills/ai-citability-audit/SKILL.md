@@ -180,6 +180,7 @@ python3 "$ENGINE" findings.json citability.html
 ```
 
 Name the file `<domain>-<subject>-<YYYY-MM>.html`, not `report.html`: an agency ends the month with a dozen of these in one folder. The engine prints a suggested name when you give it a generic one.
+Brand it once, not per report: `python3 "$ENGINE" --print-brand-template > agency.json`, fill in the agency name and colour, and every report built from that folder wears it, from any skill in this repository. The findings file still overrides it per client, and `credit: false` in that profile removes our name everywhere, free and complete. Section "The agency profile" in `shared/report-engine/CONTRACT.md`.
 
 
 Required: a one-sentence verdict, four KPIs (median passage score, quotable as

@@ -1013,6 +1013,101 @@ def render_spark(values):
     )
 
 
+# --------------------------------------------------------------------------
+# the agency profile
+# --------------------------------------------------------------------------
+#
+# A freelance sets their identity once and every report from every skill wears
+# it, instead of retyping the brand into each findings file. The findings file
+# always wins: explicit beats ambient, so a per client override still works.
+#
+# Read from disk, so treated like any other untrusted input. Values are escaped
+# by the same esc() as everything else, the colour goes through the same
+# contrast correction, and no key here can inject markup. A missing or broken
+# profile degrades to no profile and never stops a run.
+
+AGENCY_KEYS = ("name", "color", "lang", "credit", "footer_note", "prepared_by")
+
+AGENCY_TEMPLATE = {
+    "_comment": "Agency profile for the Hack The SEO report engine. "
+                "Put this file next to your reports, or at "
+                "~/.config/hacktheseo/agency.json, and every report you build "
+                "wears it. Anything you set in a findings file overrides it.",
+    "name": "Your agency name",
+    "color": "#1F4B99",
+    "lang": "fr",
+    "credit": True,
+    "footer_note": "you@example.com",
+    "prepared_by": "Your agency name",
+}
+
+
+def agency_profile_path(explicit=None):
+    """Where the profile lives, most specific first. Returns a path or None."""
+    candidates = []
+    if explicit:
+        candidates.append(explicit)
+    env = os.environ.get("HTS_AGENCY_PROFILE")
+    if env:
+        candidates.append(env)
+    candidates.append(os.path.join(os.getcwd(), "agency.json"))
+    home = os.path.expanduser("~")
+    if home and home != "~":
+        candidates.append(os.path.join(home, ".config", "hacktheseo", "agency.json"))
+    for candidate in candidates:
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+def load_agency_profile(path):
+    """
+    Read the profile, or return an empty one.
+
+    Never raises. A profile that cannot be read is a profile that is not
+    applied, and the caller says so on stderr. A report that fails to build
+    because of a branding file would be the worst possible trade.
+    """
+    if not path:
+        return {}, ""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (OSError, ValueError) as error:
+        return {}, "ignored the agency profile %s: %s" % (path, error)
+    if not isinstance(payload, dict):
+        return {}, "ignored the agency profile %s: the top level must be an object" % path
+    profile = {}
+    for key in AGENCY_KEYS:
+        if key in payload and payload[key] is not None:
+            profile[key] = payload[key]
+    return profile, ""
+
+
+def apply_agency_profile(data, profile):
+    """Fill only what the findings file left empty."""
+    if not profile:
+        return data
+    meta = data.setdefault("meta", {})
+    if not isinstance(meta, dict):
+        return data
+    brand = meta.setdefault("brand", {})
+    if isinstance(brand, dict):
+        if not brand.get("name") and profile.get("name"):
+            brand["name"] = profile["name"]
+        if not brand.get("color") and profile.get("color"):
+            brand["color"] = profile["color"]
+    for key in ("lang", "footer_note", "prepared_by"):
+        if not meta.get(key) and profile.get(key):
+            meta[key] = profile[key]
+    # credit is a boolean, so "not set" has to be tested by absence. Removing
+    # our name is free and complete, and the profile is allowed to do it once
+    # for every report rather than per file.
+    if "credit" not in meta and "credit" in profile:
+        meta["credit"] = bool(profile["credit"])
+    return data
+
+
 def build_html(data, artifact=False):
     meta = data.get("meta") or {}
     lang = (meta.get("lang") or "en").lower()
@@ -1209,13 +1304,29 @@ def suggested_name(data):
 
 
 def main(argv):
+    if "--print-brand-template" in argv:
+        print(json.dumps(AGENCY_TEMPLATE, indent=2, ensure_ascii=False))
+        return 0
+
     artifact = "--artifact" in argv
     argv = [a for a in argv if a != "--artifact"]
+
+    brand_path = None
+    if "--brand" in argv:
+        index = argv.index("--brand")
+        if index + 1 >= len(argv):
+            print("--brand needs a path to an agency profile", file=sys.stderr)
+            return 2
+        brand_path = argv[index + 1]
+        del argv[index:index + 2]
+
     if len(argv) != 3:
         print(
-            "usage: render_report.py [--artifact] <findings.json> <output.html>",
+            "usage: render_report.py [--artifact] [--brand agency.json] "
+            "<findings.json> <output.html>",
             file=sys.stderr,
         )
+        print("       render_report.py --print-brand-template", file=sys.stderr)
         return 2
     try:
         with open(argv[1], "r", encoding="utf-8") as handle:
@@ -1230,6 +1341,15 @@ def main(argv):
     if not isinstance(data, dict):
         print("the top level of the findings file must be an object", file=sys.stderr)
         return 1
+
+    if brand_path and not os.path.isfile(brand_path):
+        print("agency profile not found: %s" % brand_path, file=sys.stderr)
+        return 1
+    found = agency_profile_path(brand_path)
+    profile, complaint = load_agency_profile(found)
+    if complaint:
+        print(complaint, file=sys.stderr)
+    data = apply_agency_profile(data, profile)
 
     try:
         page = build_html(data, artifact=artifact)

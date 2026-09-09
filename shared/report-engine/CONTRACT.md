@@ -15,6 +15,7 @@ Write the JSON, run the script, hand the user the HTML path. Never hand-write th
 
 - [Top level](#top-level)
 - [meta](#meta)
+- [The agency profile](#the-agency-profile)
 - [headline](#headline)
 - [kpis](#kpis)
 - [sections and blocks](#sections-and-blocks)
@@ -49,6 +50,52 @@ Only `meta` and `sections` really matter. Everything else is optional.
 | `brand.color` | string | Hex like `#1F6F4E`. Any hue works, see below |
 | `credit` | bool | Defaults `true`. Set `false` only when the user asks |
 | `footer_note` | string | Second footer item, e.g. a confidentiality line |
+| `prepared_by` | string | Who produced it. Usually comes from the agency profile |
+
+## The agency profile
+
+A freelance should not retype their brand into every findings file. The engine
+reads an **agency profile** once and applies it to every report it builds, from
+any skill.
+
+```bash
+# write the template, edit it, keep it next to your reports
+python3 render_report.py --print-brand-template > agency.json
+```
+
+```json
+{
+  "name": "Atelier Vandel",
+  "color": "#B31E2F",
+  "lang": "fr",
+  "credit": true,
+  "footer_note": "Atelier Vandel, contact@atelier-vandel.fr",
+  "prepared_by": "Atelier Vandel"
+}
+```
+
+Where it looks, most specific first, and it stops at the first file it finds:
+
+1. `--brand <path>` on the command line
+2. `$HTS_AGENCY_PROFILE`
+3. `agency.json` in the working directory
+4. `~/.config/hacktheseo/agency.json`
+
+**The findings file always wins.** The profile fills only what you left empty,
+so a report for a client with their own colours still overrides it, per file,
+with no flag.
+
+Three things to know:
+
+- `credit: false` in the profile removes our name from every report the agency
+  produces, in one place, for good. That is free and complete, like the two
+  other levels, and it is never going to become a paid option.
+- A profile that cannot be read is a profile that is not applied. The engine
+  prints one line on stderr and builds the report anyway. A branding file must
+  never be able to stop a deliverable.
+- Values from the profile are escaped exactly like values from the findings
+  file, and the colour goes through the same contrast correction. The profile
+  is input, not markup.
 
 ## headline
 
