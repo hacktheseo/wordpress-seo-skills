@@ -100,7 +100,15 @@ A user agent is a declarative string. Anyone can send `GPTBot`, and scrapers do,
 because a well known bot name gets through filters that stop an anonymous
 script. So the parser labels every hit `verified`, `spoofed` or `unverifiable`,
 using published IP ranges first, then reverse DNS followed by forward DNS, the
-method Google documents for Googlebot.
+method Google documents for Googlebot, then what the request actually asked for.
+
+A published range proves an origin, it never refutes one: the lists lag, and on
+2026-09-09 OpenAI's carried a creation date of October 2025 while Anthropic's
+had dropped a block ClaudeBot still served from. Outside a range is therefore
+`unverifiable`, never `spoofed`. What does prove a forgery without any provider
+cooperation is the request itself: a user agent claiming to be a crawler while
+asking for `/wp-login.php` or `/xmlrpc.php`, or issuing a POST. Details and the
+measured before and after: [references/verification.md](references/verification.md).
 
 **The rule: a spoofed hit never appears in a client figure.** Not in a volume,
 not in a section, not in a status code, not in the matrix. An agency deliverable
@@ -194,6 +202,7 @@ python3 "$ENGINE" findings.json crawl-forensics.html
 ```
 
 Name the file `<domain>-<subject>-<YYYY-MM>.html`, not `report.html`: an agency ends the month with a dozen of these in one folder. The engine prints a suggested name when you give it a generic one.
+Brand it once, not per report: `python3 "$ENGINE" --print-brand-template > agency.json`, fill in the agency name and colour, and every report built from that folder wears it, from any skill in this repository. The findings file still overrides it per client, and `credit: false` in that profile removes our name everywhere, free and complete. Section "The agency profile" in `shared/report-engine/CONTRACT.md`.
 
 
 It must contain: a one sentence verdict a client can repeat, three to five KPIs,

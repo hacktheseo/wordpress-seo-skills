@@ -497,20 +497,73 @@ def parse_csvline(line, delimiter, mapping):
 # verification
 # --------------------------------------------------------------------------
 
+# Requests no search or AI crawler ever makes. A user agent claiming to be a
+# crawler while asking for one of these is forged, and that conclusion needs no
+# IP list: it rests on the request itself.
+#
+# The list is deliberately short. Every entry has to be something a real
+# crawler cannot want, because a false accusation in a report an agency sends
+# its client costs more than a forgery that goes uncounted.
+FORGERY_PATHS = (
+    "/wp-login.php",
+    "/xmlrpc.php",
+    "/wp-admin",
+    "/wp-config",
+    "/.env",
+    "/.git",
+    "/.ssh",
+    "/.aws",
+    "/phpmyadmin",
+    "/adminer",
+    "/vendor/phpunit",
+)
+
+# A crawler reads. It does not write.
+WRITE_METHODS = frozenset(("POST", "PUT", "DELETE", "PATCH"))
+
+
+def forged_behaviour(url, method):
+    """
+    Positive evidence that a claimed crawler user agent is forged, or None.
+
+    Never an absence of evidence: this returns a reason only when the request
+    itself proves the claim false.
+    """
+    verb = (method or "").strip().upper()
+    if verb in WRITE_METHODS:
+        return "%s request, and a crawler only reads" % verb
+    path = (url or "").split("?", 1)[0].lower()
+    if not path.startswith("/"):
+        path = "/" + path
+    for probe in FORGERY_PATHS:
+        if path == probe or path.startswith(probe + "/") or path.startswith(probe + "."):
+            return "requested %s, which no crawler requests" % probe
+    return None
+
+
 class Verifier:
     """
     Answers one question per (IP, claimed provider): verified, spoofed or
     unverifiable.
 
     Two methods, in this order:
-      1. Published IP ranges. Conclusive both ways when the provider publishes
-         a complete list.
+      1. Published IP ranges. Conclusive one way only. Inside a published
+         range proves the origin. Outside it proves nothing, because the
+         published lists lag reality: Anthropic dropped 160.79.104.0/23 while
+         ClaudeBot was still serving from it, and the OpenAI list carried a
+         creationTime of October 2025 well into September 2026. Refuting a
+         claim on an absence from a list that old would invent forgeries.
       2. Reverse DNS then forward DNS. The method Google documents for
          Googlebot: the PTR record must end in a provider domain, and the
-         forward lookup of that hostname must return the same IP.
+         forward lookup of that hostname must return the same IP. Conclusive
+         both ways, for the providers that document a domain.
 
     Absence of evidence is never treated as spoofing. No PTR record and no
     published range means unverifiable, which is a different fact.
+
+    A third test lives outside this class, in forged_behaviour(): what the
+    request asked for. It is the only test that can call a forgery without any
+    provider cooperation, and it rests on positive evidence.
     """
 
     def __init__(self, ranges_path=None, use_dns=True, max_lookups=800, timeout=3.0):
@@ -522,6 +575,7 @@ class Verifier:
         self.cache = {}
         self.notes = []
         self.dns_failures = 0
+        self.list_date = ""
         socket.setdefaulttimeout(timeout)
         if ranges_path:
             self._load_ranges(ranges_path)
@@ -549,6 +603,8 @@ class Verifier:
             if key.startswith("_"):
                 if key == "_sources" and isinstance(value, dict):
                     self.sources = value
+                if key in ("_generated", "_fetched") and isinstance(value, str):
+                    self.list_date = value.strip()[:10]
                 continue
             nets = []
             for cidr in self._flatten(value):
@@ -589,6 +645,19 @@ class Verifier:
         self.cache[key] = result
         return result
 
+    def _outside_reason(self):
+        """
+        Why an address outside the published list stays unverifiable.
+
+        Names the list's date when the file carries one, because the age is
+        the whole argument: a list is a snapshot, and the provider can add a
+        range the day after it was written.
+        """
+        if self.list_date:
+            return ("outside the published list of %s, which cannot rule it out"
+                    % self.list_date)
+        return "outside the published list, which cannot rule it out"
+
     def _verify_uncached(self, ip, bot):
         nets = self.networks.get((bot["ranges"] or "").lower())
         if nets:
@@ -600,7 +669,7 @@ class Verifier:
                 if address.version == net.version and address in net:
                     return ("verified", "published IP range")
             if not bot["rdns"]:
-                return ("spoofed", "outside every published range of the provider")
+                return ("unverifiable", self._outside_reason())
         if bot["rdns"] and self.use_dns:
             if self.lookups >= self.max_lookups:
                 return ("unverifiable", "DNS lookup budget exhausted")
@@ -621,7 +690,7 @@ class Verifier:
                 return ("verified", "rDNS then fDNS on %s" % hostname)
             return ("spoofed", "forward lookup of %s does not return this IP" % hostname)
         if nets:
-            return ("spoofed", "outside every published range of the provider")
+            return ("unverifiable", self._outside_reason())
         return ("unverifiable", "no published range and no documented rDNS domain")
 
 
@@ -931,6 +1000,15 @@ def run(args):
 
                 url = normalise_url(record["url"])
                 status, reason = verifier.verify(record["ip"], bot)
+
+                # What the request asked for can settle what the IP list
+                # cannot. Applied only when the origin is not already proven,
+                # so a genuine crawler is never accused of forging itself.
+                if status != "verified":
+                    forged = forged_behaviour(record["url"], record.get("method"))
+                    if forged:
+                        status, reason = "spoofed", forged
+
                 bucket.hits += 1
                 bucket.reasons[reason] += 1
                 bucket.ips[record["ip"]] += 1

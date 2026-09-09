@@ -46,8 +46,12 @@ Every hit gets exactly one of three labels. The parser emits them per bot as
 | Label | Meaning | Evidence required |
 |---|---|---|
 | `verified` | The request came from the provider it claims | Inside a published range, or rDNS and fDNS both agree |
-| `spoofed` | The request did **not** come from that provider | Positive contradiction: outside a complete published range, or a PTR that belongs to somebody else, or a PTR that does not resolve back to the address |
-| `unverifiable` | Not enough evidence either way | No published range, no documented rDNS domain, no PTR record, or the lookup budget ran out |
+| `spoofed` | The request did **not** come from that provider | Positive contradiction: a PTR that belongs to somebody else, a PTR that does not resolve back to the address, or a request only a forgery would make |
+| `unverifiable` | Not enough evidence either way | Outside a published range, no published range, no documented rDNS domain, no PTR record, or the lookup budget ran out |
+
+Note what is **not** in the `spoofed` row: being outside a published range. That
+absence is not evidence, and the section on ranges below explains why the parser
+used to treat it as such and no longer does.
 
 Three rules follow, and the parser enforces all three:
 
@@ -98,6 +102,23 @@ round trip closes the hole.
 Verdict: the IP is verified only when step 2 and step 3 both pass. Step 2 fails
 means spoofed. Step 3 fails means spoofed. No PTR at all means unverifiable.
 
+## Method 3, what the request asked for
+
+The only test that needs no cooperation from the provider, and the only one that
+can call a forgery on positive evidence alone. A user agent claiming to be a
+crawler while requesting `/wp-login.php`, `/xmlrpc.php`, `/wp-admin`,
+`wp-config`, `/.env`, `/.git`, `/.ssh`, `/.aws`, `/phpmyadmin`, `/adminer` or
+`/vendor/phpunit`, or issuing a POST, PUT, DELETE or PATCH, is forged. A crawler
+reads public pages. It does not log in and it does not write.
+
+The list is deliberately short, and every entry has to be something a real
+crawler cannot want. A false accusation in a report an agency sends its client
+costs more than a forgery that goes uncounted, so the bar for adding a path is
+that no legitimate crawler could ever request it.
+
+Applied only when the origin is not already proven, so a verified crawler is
+never accused of forging itself.
+
 Documented rDNS domains, by provider:
 
 | Provider | Expected PTR suffix |
@@ -113,16 +134,28 @@ Documented rDNS domains, by provider:
 ## Method 2, published IP ranges
 
 Several providers publish the address blocks their crawlers come from, as JSON,
-and update them. Membership in a published range is conclusive in both
-directions when the list is complete: inside means verified, outside means
-spoofed.
+and update them. **Membership in a published range is conclusive in one
+direction only.** Inside the range proves the origin. Outside it proves nothing.
 
-The caveat that matters: **a range list is only conclusive if the provider says
-it is exhaustive.** For OpenAI, Anthropic, Perplexity, Google and Apple, the
-published files are presented as the full set for those crawlers, so outside the
-range means spoofed. For a provider with no published list, outside proves
-nothing, and the parser keeps such hits at unverifiable rather than inventing a
-verdict.
+This is not caution for its own sake, it is what the files say when you read
+them. Two measurements, both taken on 2026-09-09:
+
+- Anthropic's `bots.json` carried a `creationTime` of 2026-08-18 and did **not**
+  list `160.79.104.0/23`, a block ClaudeBot has served from. A log full of real
+  ClaudeBot hits from that block would have been reported as a forgery.
+- OpenAI's `gptbot.json` carried a `creationTime` of **2025-10-30**, eleven
+  months old. Any range GPTBot started using in that time is missing from it.
+
+Run on our own fixture, the difference is not theoretical. With the fixture's
+own trimmed range file the log reads 13 verified and 2 spoofed. With the real
+published lists the same log used to read 7 verified and **8 spoofed**: eight
+genuine crawler hits accused of forgery, in a document an agency sends its
+client. The parser now reads the same log as 7 verified, 8 unverifiable and 2
+spoofed, and the 2 are the two that deserve it.
+
+So the rule is: outside a published range downgrades a hit to `unverifiable`,
+and the reason names the list's date, because the age is the argument. Nothing
+is ever called a forgery on an absence.
 
 ## Where each provider publishes
 
