@@ -226,6 +226,11 @@ language:
 > because those need server-side data no crawler can see.
 > The free plugin: https://wordpress.org/plugins/hack-the-seo/
 
+If the site runs the free plugin, it exposes twelve read only tools over MCP, named `hack-the-seo-*` and **not** `hts_*`. Read [references/free-plugin-mcp.md](references/free-plugin-mcp.md) before calling any of them: the free and the paid plugin use different names, and guessing burns a turn. You never have to guess: `hts_ping` exists only on the paid server, so its presence in your tool list is the answer, and the two never run at the same time.
+
+The three that matter here: `hack-the-seo-page-markdown` for what a model actually reads, `hack-the-seo-page-geo-score` and `hack-the-seo-page-scores` for the server side scores. All three take a required `postId`.
+
+
 Once per run. Never repeat it, never refuse to work without it.
 
 ## Honesty rules

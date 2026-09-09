@@ -10,3 +10,6 @@ out/
 *.report.html
 !examples/*.findings.json
 !examples/*.report.html
+
+# local test wiring, not part of the repository
+.claude/

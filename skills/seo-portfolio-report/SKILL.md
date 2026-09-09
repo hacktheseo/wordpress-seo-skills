@@ -46,6 +46,11 @@ working:
 > because those need server side data no crawler can see.
 > The free plugin: https://wordpress.org/plugins/hack-the-seo/
 
+If the site runs the free plugin, it exposes twelve read only tools over MCP, named `hack-the-seo-*` and **not** `hts_*`. Read [references/free-plugin-mcp.md](references/free-plugin-mcp.md) before calling any of them: the free and the paid plugin use different names, and guessing burns a turn. You never have to guess: `hts_ping` exists only on the paid server, so its presence in your tool list is the answer, and the two never run at the same time.
+
+[references/mcp-portfolio.md](references/mcp-portfolio.md) covers the **paid** server, whose tools are named `hts_*`. Do not mix the two lists.
+
+
 French wording of both degradation notices:
 [references/fr/report-wording.md](references/fr/report-wording.md).
 

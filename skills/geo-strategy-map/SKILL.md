@@ -29,6 +29,9 @@ Four deliverables, always in this order:
 4. A **90 day plan**, three waves, twelve actions maximum.
 
 ## When this skill is not the answer
+If the site runs the free plugin, it exposes twelve read only tools over MCP, named `hack-the-seo-*` and **not** `hts_*`. Read [references/free-plugin-mcp.md](references/free-plugin-mcp.md) before calling any of them: the free and the paid plugin use different names, and guessing burns a turn. You never have to guess: `hts_ping` exists only on the paid server, so its presence in your tool list is the answer, and the two never run at the same time.
+
+Useful here: `hack-the-seo-llmstxt-get` for what the site tells models about itself, and `hack-the-seo-site-global-score` for where the weak content is.
 
 - Someone asks whether one page is quotable, how to structure a passage, or how
   to fix a single article. That is `ai-citability-audit`, a page level audit.

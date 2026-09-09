@@ -249,3 +249,8 @@ d'utilisateurs, toutes éditoriales, aucune sur l'offre." The matrix fills, the
 For continuous monitoring instead of a one off audit, the free Hack The SEO
 plugin records verified AI bot hits server side, day by day:
 https://wordpress.org/plugins/hack-the-seo/
+
+If the site runs the free plugin, it exposes twelve read only tools over MCP, named `hack-the-seo-*` and **not** `hts_*`. Read [references/free-plugin-mcp.md](references/free-plugin-mcp.md) before calling any of them: the free and the paid plugin use different names, and guessing burns a turn. You never have to guess: `hts_ping` exists only on the paid server, so its presence in your tool list is the answer, and the two never run at the same time.
+
+The free plugin's crawler counts are **aggregated and unverified**: it returns no IP address, so it cannot tell a genuine GPTBot from a forged one. Use it to see the shape of the traffic, never to state a verified figure. That still needs the raw access log and the parser below.
+
