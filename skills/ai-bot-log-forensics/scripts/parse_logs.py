@@ -630,7 +630,7 @@ RANGES_TEMPLATE = {
                 "Re-check every URL before use, they move.",
     "_sources": {
         "openai": "https://openai.com/gptbot.json, /chatgpt-user.json, /searchbot.json",
-        "anthropic": "https://www.anthropic.com/ips.json",
+        "anthropic": "https://claude.com/crawling/bots.json",
         "perplexity": "https://www.perplexity.ai/perplexitybot.json, /perplexity-user.json",
         "google": "https://developers.google.com/static/search/apis/ipranges/googlebot.json "
                   "plus special-crawlers.json and user-triggered-fetchers.json",

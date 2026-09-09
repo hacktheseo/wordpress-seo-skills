@@ -133,7 +133,7 @@ a failure mode you want to notice.
 | Provider | Published source |
 |---|---|
 | OpenAI | `https://openai.com/gptbot.json`, `https://openai.com/chatgpt-user.json`, `https://openai.com/searchbot.json` |
-| Anthropic | `https://www.anthropic.com/ips.json` |
+| Anthropic | `https://claude.com/crawling/bots.json (was www.anthropic.com/ips.json until 2026, that URL now 404s)` |
 | Perplexity | `https://www.perplexity.ai/perplexitybot.json`, `https://www.perplexity.ai/perplexity-user.json` |
 | Google | `https://developers.google.com/static/search/apis/ipranges/googlebot.json`, `special-crawlers.json`, `user-triggered-fetchers.json`, `user-triggered-fetchers-google.json` in the same folder |
 | Microsoft | `https://www.bing.com/toolbox/bingbot.json` |

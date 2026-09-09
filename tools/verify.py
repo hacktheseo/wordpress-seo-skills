@@ -516,8 +516,13 @@ def check_urls(report):
         for f in files:
             if not f.endswith((".md", ".json")):
                 continue
-            for hit in URL_RE.findall(read(os.path.join(root, f))):
-                url = hit.rstrip(".,;:")
+            text = read(os.path.join(root, f))
+            for match in URL_RE.finditer(text):
+                # "+https://..." inside a user agent string is a convention,
+                # not a link anyone is meant to open. Do not probe it.
+                if match.start() and text[match.start() - 1] == "+":
+                    continue
+                url = match.group(0).rstrip(".,;:")
                 if not any(bad in url for bad in URL_SKIP):
                     urls.add(url)
     bad = []
