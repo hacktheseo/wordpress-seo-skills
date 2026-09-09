@@ -1,0 +1,65 @@
+{
+  "agency": {
+    "name": "Atelier Kermeur",
+    "color": "#1F6F4E",
+    "lang": "fr",
+    "credit": true,
+    "footer_note": "Usage interne"
+  },
+  "period": {
+    "start": "2026-08-01",
+    "end": "2026-08-31"
+  },
+  "compare_to": "previous_period",
+  "actions_log": "actions.csv",
+  "sites": [
+    {
+      "id": "boutique-escalade",
+      "domain": "boutique-escalade.fr",
+      "client": "Boutique Escalade",
+      "lang": "fr",
+      "gsc": {
+        "dates": "exports/boutique-escalade/Dates.csv"
+      },
+      "brand": {
+        "name": "Boutique Escalade"
+      }
+    },
+    {
+      "id": "cabinet-vandel",
+      "domain": "cabinet-vandel.fr",
+      "client": "Cabinet Vandel",
+      "lang": "fr",
+      "gsc": {
+        "dates": "exports/cabinet-vandel/Dates.csv"
+      },
+      "brand": {
+        "name": "Cabinet Vandel"
+      }
+    },
+    {
+      "id": "studio-brix",
+      "domain": "studiobrix.com",
+      "client": "Studio Brix",
+      "lang": "en",
+      "gsc": {
+        "dates": "exports/studio-brix/Dates.csv"
+      },
+      "brand": {
+        "name": "Studio Brix"
+      }
+    },
+    {
+      "id": "ecole-neros",
+      "domain": "ecole-neros.fr",
+      "client": "Ecole Neros",
+      "lang": "fr",
+      "gsc": {
+        "dates": "exports/ecole-neros/Dates.csv"
+      },
+      "brand": {
+        "name": "Ecole Neros"
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "skill_name": "seo-portfolio-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I run an agency with 6 WordPress clients. I need the monthly reports for August, one per client plus something for my team.",
+      "should_trigger": true,
+      "expected_output": "Asks the single question portfolio view, client reports or both, defaults to both, looks for portfolio.json and offers to create one. Requests the Search Console exports covering August and July for each site, parses them with gsc_parse.py, drops the last 3 days, crosses the action log, then renders one HTML per client plus a portfolio HTML with the shared engine. Client reports follow the order what changed, what we did, next month.",
+      "files": [],
+      "baseline": "Without the skill: writes a generic markdown template with placeholder sections, asks for data site by site, treats the last incomplete Search Console days as real, produces no HTML and no portfolio view."
+    },
+    {
+      "id": 2,
+      "prompt": "Il me faut le rapport mensuel client pour mes 4 sites, en marque blanche avec le logo de mon agence. Deux clients sont anglophones.",
+      "should_trigger": true,
+      "expected_output": "Repond en francais, produit les deux rapports francais en francais et les deux rapports anglophones en anglais d'apres sites[].lang, applique meta.brand.name et meta.brand.color depuis portfolio.json, laisse la ligne de credit active sans la presenter comme une contrainte, et charge references/fr/report-wording.md pour les livrables francais.",
+      "files": [
+        "portfolio.json",
+        "exports/boutique-escalade/Dates.csv",
+        "actions.csv"
+      ],
+      "baseline": "Sans la skill: produit quatre rapports dans la langue de la conversation, sans marque, sans distinction de langue par client, et sans note de limites."
+    },
+    {
+      "id": 3,
+      "prompt": "We rewrote 12 product pages on 5 August. Did it work? Here are the Search Console exports.",
+      "should_trigger": true,
+      "expected_output": "Builds a treated series from the 12 modified URLs and a control series from comparable untouched pages of the same site, runs impact.py with the action date, and reports the difference in differences with its p value plus the changepoint date. States that the result is consistent with the action and is not proof of cause. Never claims the rewrite generated a number of clicks.",
+      "files": [
+        "portfolio.json",
+        "exports/boutique-escalade/Dates.csv",
+        "actions.csv"
+      ],
+      "baseline": "Without the skill: compares the month before and the month after on the modified pages only, attributes the whole difference to the rewrite, and ignores seasonality, algorithm updates and the incomplete last days."
+    },
+    {
+      "id": 4,
+      "prompt": "Same portfolio, but this month one client never sent their Search Console export and another site's MCP server is down.",
+      "should_trigger": true,
+      "expected_output": "Produces every other report, marks the two sites as no data in the portfolio table with a medium finding naming the reason and the fix, lists the skipped sites in the run summary, and does not retry in a loop or abort the run.",
+      "files": [
+        "portfolio-degraded.json",
+        "exports/boutique-escalade/Dates.csv"
+      ],
+      "baseline": "Without the skill: stops at the first missing file, or silently omits the two sites so the agency discovers the gap when a client asks."
+    },
+    {
+      "id": 5,
+      "prompt": "On a mis en ligne la refonte il y a 9 jours, tu peux me chiffrer l'impact pour le rapport ?",
+      "should_trigger": true,
+      "expected_output": "Refuse de conclure et dit pourquoi: 9 jours de recul contre 28 requis, 14 minimum absolu, Google n'a pas fini de recrawler et les 3 derniers jours de l'export sont incomplets. Propose de decrire le mouvement observe sans l'attribuer, et de mesurer au rapport suivant. Ne produit aucun chiffre d'impact.",
+      "files": [],
+      "baseline": "Sans la skill: calcule une variation avant apres sur 9 jours et l'attribue a la refonte."
+    },
+    {
+      "id": 6,
+      "prompt": "Analyse mes logs serveur Nginx pour voir si GPTBot est vraiment passe sur le site.",
+      "should_trigger": false,
+      "expected_output": "Does not fire. This is single site AI crawler log forensics, handled by ai-bot-log-forensics. Firing here would load a portfolio reporting workflow for a job that has no portfolio, no period and no client deliverable.",
+      "files": [
+        "access.log"
+      ],
+      "baseline": "Near miss control: the description mentions AI crawler passes as a plugin signal, which must not be enough to trigger a monthly reporting workflow."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the baseline answer is a per site prose summary with no portfolio view, no control group, no refusal to conclude on short windows and no rendered deliverable."
+}

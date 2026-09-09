@@ -1,0 +1,7 @@
+{
+  "_comment": "Trimmed sample for the evaluations, not a current range list. Rebuild a real one with --print-ranges-template before any audit.",
+  "openai": {"prefixes": [{"ipv4Prefix": "20.171.207.0/24"}]},
+  "anthropic": ["160.79.104.0/23"],
+  "perplexity": ["4.196.0.0/16"],
+  "google": {"prefixes": [{"ipv4Prefix": "66.249.64.0/19"}]}
+}

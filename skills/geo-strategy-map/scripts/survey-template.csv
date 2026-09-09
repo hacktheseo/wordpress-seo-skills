@@ -1,0 +1,5 @@
+prompt_id,prompt,family,engine,run,date,cited,position,sentiment,cited_url,note
+cat-01,"Quel outil de SEO pour une petite equipe en France ?",category-discovery,chatgpt,1,2026-09-08,no,none,none,,"cite 4 concurrents, aucun nous"
+cat-01,"Quel outil de SEO pour une petite equipe en France ?",category-discovery,chatgpt,2,2026-09-08,yes,footnote,neutral,https://exemple.fr/guides/comparatif/,"cite en fin de reponse"
+cat-01,"Quel outil de SEO pour une petite equipe en France ?",category-discovery,chatgpt,3,2026-09-08,no,none,none,,
+cmp-01,"X ou Y pour un site WordPress ?",named-comparison,perplexity,1,2026-09-08,yes,first,positive,https://blog-tiers.fr/top-10-outils/,"cite via un tiers, pas notre site"

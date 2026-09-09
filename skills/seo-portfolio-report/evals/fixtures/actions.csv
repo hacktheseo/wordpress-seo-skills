@@ -1,0 +1,8 @@
+date,site,url,type,description,statut
+2026-08-05,boutique-escalade,/guides/,maillage,Maillage interne refait sur les 12 guides,fait
+2026-08-05,boutique-escalade,/produits/,technique,Blocage robots.txt leve sur le catalogue,fait
+2026-08-12,cabinet-vandel,/honoraires/,contenu,Page honoraires reecrite en questions reponses,fait
+2026-08-14,studio-brix,/work/,schema,Schema Organization et sameAs ajoutes,fait
+2026-08-19,ecole-neros,/formations/,meta,Titres et descriptions reecrits sur 34 pages,fait
+2026-08-22,boutique-escalade,/blog/,contenu,6 articles rafraichis,fait
+2026-08-28,cabinet-vandel,/,technique,Redirections en chaine supprimees,en cours

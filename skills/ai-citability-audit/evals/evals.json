@@ -1,0 +1,48 @@
+{
+  "skill_name": "ai-citability-audit",
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the baseline answer is a page-level opinion with no segmentation, no measured value and no rendered deliverable.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audit this page for AI citability: https://example.com/pricing-guide/",
+      "should_trigger": true,
+      "expected_output": "Fetches the served HTML with curl rather than describing the page from memory, runs scripts/segment_passages.py, scores every passage out of 100 against references/scoring.md, reports the median and the band counts, proposes before and after rewrites for the five lowest passages, and renders findings.json with the shared engine. States that the scale is a heuristic and promises no citation.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Pourquoi ChatGPT ne cite jamais mon guide ? https://exemple.fr/guide-tarifs/",
+      "should_trigger": true,
+      "expected_output": "Fires on the French prompt, answers in French, and produces every deliverable in French using references/fr/rewrite-patterns.md and references/fr/wording.md with meta.lang set to fr. Segments into passages instead of giving a page-level score, names the measured causes (anaphora in the opening sentence, context openers, content absent from the served HTML) and gives rewritten passages before and after.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My whole article is in a React app, the HTML source is almost empty. Is that a problem for AI search?",
+      "should_trigger": true,
+      "expected_output": "Runs the fetch and the validation step, stops before scoring because the served HTML has fewer than 150 body words, and reports that as the dominant finding: AI crawlers do not execute JavaScript, so the body does not exist for them. Quantifies the gap with the --rendered comparison if a rendered copy is available, and says the gap was not measured rather than guessing when it is not.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Audit the citability of https://mon-site.fr/faq/ , the Hack The SEO plugin is installed on it",
+      "should_trigger": true,
+      "expected_output": "Probes /faq/.md and /llms.txt, fetches the Markdown version to segment the passages, keeps the served HTML for the extractability criterion, reads the server-side GEO score and reports it next to the passage median while explaining that the two measure different objects. Checks the FAQPage JSON-LD questions against the visible text and flags any question absent from it as a negative signal.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Write me a 1500 word blog post about generative engine optimisation.",
+      "should_trigger": false,
+      "expected_output": "Near miss: the skill must NOT fire. This is a content writing request with no page to audit, no URL and no passage to score. Claude writes the article without segmenting anything, without running the script and without producing a citability deliverable.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Compare my page with the two competitors that get cited on this question: https://exemple.fr/prix/ vs https://a.fr/prix/ and https://b.fr/prix/",
+      "should_trigger": true,
+      "expected_output": "Fetches the three pages the same way, segments each, and compares passage structure on the same question: heading form, position of the answer inside the passage, word count, facts per 100 words. Reports the delta and the date of the comparison, and does not assert that a competitor is cited unless the user supplied that observation.",
+      "files": []
+    }
+  ]
+}

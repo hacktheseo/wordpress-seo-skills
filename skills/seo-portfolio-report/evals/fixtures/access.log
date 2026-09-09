@@ -1,0 +1,20 @@
+20.171.207.15 - - [12/Aug/2026:04:11:02 +0200] "GET /blog/choisir-ses-chaussons/ HTTP/1.1" 200 48211 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot" 0.412
+20.171.207.15 - - [12/Aug/2026:04:11:09 +0200] "GET /blog/tailles-chaussons/ HTTP/1.1" 200 39122 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot" 0.388
+20.171.207.19 - - [12/Aug/2026:05:02:31 +0200] "GET /blog/entretien-materiel/ HTTP/1.1" 200 30110 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot" 2.771
+160.79.104.10 - - [12/Aug/2026:06:02:44 +0200] "GET /produits/chausson-x/ HTTP/1.1" 403 0 "-" "Mozilla/5.0 (compatible; ClaudeBot/1.0; +claudebot@anthropic.com)" 0.011
+160.79.104.10 - - [12/Aug/2026:06:02:46 +0200] "GET /produits/chausson-y/ HTTP/1.1" 403 0 "-" "Mozilla/5.0 (compatible; ClaudeBot/1.0; +claudebot@anthropic.com)" 0.009
+160.79.104.11 - - [12/Aug/2026:06:04:01 +0200] "GET /produits/chausson-z/ HTTP/1.1" 403 0 "-" "Mozilla/5.0 (compatible; ClaudeBot/1.0; +claudebot@anthropic.com)" 0.010
+45.83.12.200 - - [12/Aug/2026:07:15:00 +0200] "GET /wp-login.php HTTP/1.1" 200 5120 "-" "Mozilla/5.0 (compatible; GPTBot/1.1; +https://openai.com/gptbot)" 0.201
+45.83.12.200 - - [12/Aug/2026:07:15:04 +0200] "GET /xmlrpc.php HTTP/1.1" 405 0 "-" "Mozilla/5.0 (compatible; GPTBot/1.1; +https://openai.com/gptbot)" 0.101
+66.249.66.1 - - [12/Aug/2026:10:00:00 +0200] "GET /blog/ HTTP/1.1" 200 12000 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 0.320
+90.12.44.7 - - [12/Aug/2026:10:05:11 +0200] "GET /tarifs/ HTTP/1.1" 200 8800 "https://www.google.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/17.4 Safari/605.1.15" 0.180
+90.12.44.7 - - [12/Aug/2026:10:05:31 +0200] "GET /produits/chausson-x/ HTTP/1.1" 200 21400 "https://boutique-escalade.fr/tarifs/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/17.4 Safari/605.1.15" 0.210
+www.boutique-escalade.fr 4.196.10.5 - - [13/Aug/2026:11:00:00 +0200] "GET /guides/tailles/?utm_source=newsletter&page=2 HTTP/1.1" 301 0 "-" "Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)" 1.842
+www.boutique-escalade.fr 4.196.10.5 - - [13/Aug/2026:11:00:03 +0200] "GET /guides/tailles/ HTTP/1.1" 200 21000 "-" "Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)" 0.640
+20.171.207.20 - - [13/Aug/2026:14:22:10 +0200] "GET /guides/tailles/ HTTP/1.1" 200 21000 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot" 0.221
+20.171.207.20 - - [13/Aug/2026:14:26:55 +0200] "GET /blog/choisir-ses-chaussons/ HTTP/1.1" 200 48211 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot" 0.402
+160.79.104.12 - - [14/Aug/2026:09:12:00 +0200] "GET /blog/choisir-ses-chaussons/ HTTP/1.1" 200 48211 "-" "Mozilla/5.0 (compatible; Claude-User/1.0; +Claude-User@anthropic.com)" 0.190
+54.36.148.1 - - [14/Aug/2026:20:41:12 +0200] "GET /blog/actualites-2023/ HTTP/1.1" 200 9100 "-" "CCBot/2.0 (https://commoncrawl.org/faq/)" 0.512
+54.36.148.1 - - [14/Aug/2026:20:41:40 +0200] "GET /blog/page/12/ HTTP/1.1" 200 7400 "-" "CCBot/2.0 (https://commoncrawl.org/faq/)" 3.900
+this line is deliberately malformed and must not stop the run
+20.171.207.21 - - [15/Aug/2026:03:00:00 +0200] "GET /produits/?orderby=price&color=noir HTTP/1.1" 200 15000 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot" 4.210

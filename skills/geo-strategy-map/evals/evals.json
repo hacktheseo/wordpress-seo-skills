@@ -1,0 +1,44 @@
+{
+  "skill_name": "geo-strategy-map",
+  "baseline": "Each case is run twice: once with the skill installed, once without. Without the skill the expected failure is a generic list of GEO advice with no prompt map, no repetition count, no noise floor and no dated plan.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Je veux une stratégie pour être cité par les IA. On vend un logiciel de facturation en France et on n'apparaît jamais dans ChatGPT.",
+      "should_trigger": true,
+      "expected_output": "Fires. Asks the six scoping questions (brand, category, three named competitors, market, buyer constraints, available material), then builds a prompt map from Search Console and support tickets rather than from imagination, classifies into the six families, defines a survey with 3 runs per prompt and per engine in fresh sessions, and ends with a French HTML report and a 90 day plan of twelve actions maximum. Never promises a citation or a rate to reach.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Here is our AI visibility survey from June and the one from September, both CSV. Did we improve?",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/geo_measure.py with both files, reads the noise floor before the deltas, and reports family by family with a signal or noise verdict. Explicitly states that any movement below the printed floor is compatible with no change at all, and says how many observations would be needed to detect the difference the client cares about. Does not present a sub floor delta as progress.",
+      "files": [
+        "baseline.csv",
+        "followup.csv"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We measure 12% brand presence in AI answers with Profound. Now what do we actually do about it?",
+      "should_trigger": true,
+      "expected_output": "Fires. Accepts the external measurement but rebuilds a frozen, versioned prompt set so the follow up is reproducible, notes that a third party tool's prompt set is not visible and therefore not comparable, runs the entity diagnosis starting with the who is X test, then produces the 2x2 of family volume against presence and a three wave plan prioritised by (prompts x weight x (1 - presence)) / effort.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Peux-tu vérifier si cet article est bien structuré pour être repris par une IA ? Voici l'URL.",
+      "should_trigger": false,
+      "expected_output": "NEAR MISS: must not fire. This is a single page citability question, handled by ai-citability-audit. The correct behaviour is to route to that skill, or to answer the page level question directly, and not to open a 90 day strategy, a prompt map or a survey protocol.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "ChatGPT says we were founded in 2019 in Belgium. We were founded in 2016 in Lyon. How do we fix that, and what else should we be doing this quarter?",
+      "should_trigger": true,
+      "expected_output": "Fires. Treats the wrong facts as an entity priority 2 finding, quotes the model answer verbatim as evidence, and puts the repairs in wave 1 in the documented order (public bases first, then sameAs and Organization JSON-LD, then the about page rewritten as dated facts). Then still runs the prompt map and the baseline survey, because the quarter question cannot be answered without a measured starting point.",
+      "files": []
+    }
+  ]
+}

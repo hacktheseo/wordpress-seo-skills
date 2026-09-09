@@ -1,0 +1,541 @@
+{
+  "meta": {
+    "title": "Visibilité dans les moteurs de réponse IA",
+    "subject": "boutique-escalade.fr",
+    "prepared_for": "Direction e-commerce",
+    "period": "1 au 31 août 2026",
+    "generated": "2026-09-09",
+    "lang": "fr",
+    "brand": {
+      "name": "Atelier Kermeur",
+      "color": "#1F6F4E"
+    },
+    "credit": true,
+    "footer_note": "Exemple de démonstration, données fictives"
+  },
+  "headline": {
+    "eyebrow": "En résumé",
+    "verdict": "Les robots IA lisent votre blog et ignorent votre catalogue.",
+    "detail": "1 812 passages vérifiés en août, dont 77 % sur le blog et 11 sur les 340 fiches produit. Un outil analytics n'aurait rien vu de tout cela : ces robots n'exécutent pas JavaScript, donc aucun tag ne se déclenche. Le correctif principal tient en une ligne de robots.txt."
+  },
+  "kpis": [
+    {
+      "label": "Passages robots IA",
+      "value": "1 812",
+      "delta": "+34 % vs juillet",
+      "tone": "good",
+      "note": "GPTBot 61 %, ClaudeBot 22 %",
+      "spark": [
+        980,
+        1042,
+        1120,
+        1098,
+        1240,
+        1310,
+        1288,
+        1402,
+        1455,
+        1520,
+        1690,
+        1812
+      ]
+    },
+    {
+      "label": "Vérifiés par DNS",
+      "value": "88,5 %",
+      "delta": "208 écartés",
+      "tone": "warning",
+      "note": "Les passages usurpés ne sont comptés nulle part"
+    },
+    {
+      "label": "Fiches produit atteintes",
+      "value": "3 / 340",
+      "delta": "0,9 %",
+      "tone": "bad",
+      "note": "Le catalogue est hors du champ de crawl"
+    },
+    {
+      "label": "Score de citabilité",
+      "value": "58",
+      "delta": "-6 vs juillet",
+      "tone": "warning",
+      "note": "Médiane des passages, sur les 40 pages les plus crawlées"
+    }
+  ],
+  "sections": [
+    {
+      "title": "Ce qu'il faut retenir",
+      "blocks": [
+        {
+          "type": "quote",
+          "text": "Une page lue et jamais citée n'a pas un problème d'accès, elle a un problème de citabilité. Ce sont deux chantiers différents, et 63 de vos pages sont dans ce cas.",
+          "source": "Diagnostic principal du mois"
+        },
+        {
+          "type": "meter",
+          "title": "Score de citabilité médian",
+          "value": 58,
+          "max": 100,
+          "display": "58",
+          "tone": "warning",
+          "band": "à retravailler",
+          "label": "Moyenne des passages notés sur les 40 pages les plus crawlées. Au-dessus de 70, un passage est citable tel quel par un moteur de réponse.",
+          "ticks": [
+            0,
+            40,
+            70,
+            100
+          ],
+          "caption": "Barème détaillé dans la skill ai-citability-audit. Ce score est une heuristique construite sur des régularités observables, pas l'algorithme d'un moteur."
+        }
+      ]
+    },
+    {
+      "title": "Qui a réellement crawlé le site",
+      "intro": "Après vérification par DNS inverse puis direct. Un user agent est une chaîne déclarative : n'importe qui peut écrire GPTBot dans un en-tête. Les passages non vérifiables sont écartés, jamais comptés.",
+      "blocks": [
+        {
+          "type": "composition",
+          "title": "Répartition des passages vérifiés",
+          "items": [
+            {
+              "label": "GPTBot",
+              "value": 1061,
+              "display": "1 061"
+            },
+            {
+              "label": "ClaudeBot",
+              "value": 398,
+              "display": "398"
+            },
+            {
+              "label": "PerplexityBot",
+              "value": 98,
+              "display": "98"
+            },
+            {
+              "label": "Google-Extended",
+              "value": 47,
+              "display": "47"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Robot",
+            "Passages",
+            "Vérifiés",
+            "Usurpés",
+            "Finalité déclarée"
+          ],
+          "numeric_columns": [
+            1,
+            2,
+            3
+          ],
+          "rows": [
+            [
+              "GPTBot",
+              "1 104",
+              "1 061",
+              "43",
+              "Entraînement"
+            ],
+            [
+              "ClaudeBot",
+              "398",
+              "398",
+              "0",
+              "Entraînement"
+            ],
+            [
+              "PerplexityBot",
+              "212",
+              "98",
+              "114",
+              "Récupération temps réel"
+            ],
+            [
+              "Google-Extended",
+              "98",
+              "47",
+              "51",
+              "Entraînement"
+            ]
+          ],
+          "caption": "Source : access log Nginx du 1er au 31 août 2026. La colonne Usurpés compte les requêtes portant le user agent sans provenir d'une plage IP du fournisseur."
+        }
+      ]
+    },
+    {
+      "title": "Où part le crawl, et où il devrait aller",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Passages par section du site",
+          "items": [
+            {
+              "label": "/blog/",
+              "value": 1402,
+              "display": "1 402",
+              "tone": "neutral"
+            },
+            {
+              "label": "/ (accueil)",
+              "value": 287,
+              "display": "287",
+              "tone": "neutral"
+            },
+            {
+              "label": "/guides/",
+              "value": 112,
+              "display": "112",
+              "tone": "good"
+            },
+            {
+              "label": "/produits/",
+              "value": 11,
+              "display": "11",
+              "tone": "bad"
+            },
+            {
+              "label": "/tarifs/",
+              "value": 0,
+              "display": "0",
+              "tone": "bad"
+            }
+          ]
+        },
+        {
+          "type": "matrix",
+          "title": "Croisement crawl et citation",
+          "axes": {
+            "x": "Axe horizontal : la page est crawlée ou non",
+            "y": "Axe vertical : la page est citée ou non"
+          },
+          "quadrants": [
+            {
+              "title": "Crawlée et citée",
+              "count": 14,
+              "tone": "good",
+              "reading": "Ça marche. Ce sont vos gabarits à répliquer.",
+              "items": [
+                "/blog/choisir-ses-chaussons/",
+                "/guides/tailles/"
+              ]
+            },
+            {
+              "title": "Citée sans être crawlée",
+              "count": 2,
+              "tone": "warn",
+              "reading": "Le modèle vous connaît par une source tierce. Fragile, vous ne contrôlez pas le contenu cité.",
+              "items": [
+                "Mention relayée par un forum"
+              ]
+            },
+            {
+              "title": "Crawlée sans être citée",
+              "count": 63,
+              "tone": "bad",
+              "reading": "Problème de citabilité, pas d'accès. La page est lue et jugée inutilisable.",
+              "items": [
+                "/blog/actualites-2024/",
+                "63 pages au total"
+              ]
+            },
+            {
+              "title": "Ni crawlée ni citée",
+              "count": 337,
+              "tone": "bad",
+              "reading": "Problème d'accès. Vérifier robots.txt, maillage interne et sitemap.",
+              "items": [
+                "La totalité du catalogue produit"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Ce que la correction de juillet a produit",
+      "intro": "Le 5 août, le maillage interne des 12 guides a été refait. Les pages non touchées servent de groupe de contrôle : elles absorbent la saisonnalité et les mises à jour d'algorithme, qui frappent les deux groupes.",
+      "blocks": [
+        {
+          "type": "timeseries",
+          "title": "Passages robots IA, pages traitées contre témoin",
+          "labels": [
+            "1 juil.",
+            "31 août"
+          ],
+          "high_label": "160",
+          "low_label": "0",
+          "event": {
+            "index": 35,
+            "label": "Maillage refait, 5 août"
+          },
+          "series": [
+            {
+              "label": "Pages traitées (12 guides)",
+              "values": [
+                22,
+                25,
+                21,
+                28,
+                24,
+                26,
+                23,
+                29,
+                27,
+                25,
+                30,
+                28,
+                26,
+                31,
+                29,
+                27,
+                33,
+                30,
+                28,
+                35,
+                32,
+                30,
+                36,
+                34,
+                31,
+                38,
+                35,
+                33,
+                40,
+                37,
+                35,
+                42,
+                39,
+                37,
+                44,
+                41,
+                58,
+                72,
+                86,
+                94,
+                101,
+                110,
+                118,
+                124,
+                131,
+                138,
+                142,
+                149,
+                153,
+                158,
+                152,
+                147,
+                150,
+                155,
+                159,
+                156,
+                152,
+                148,
+                151,
+                157,
+                154,
+                150
+              ]
+            },
+            {
+              "label": "Témoin (pages non touchées)",
+              "values": [
+                40,
+                42,
+                39,
+                45,
+                41,
+                43,
+                40,
+                46,
+                44,
+                42,
+                47,
+                45,
+                43,
+                48,
+                46,
+                44,
+                50,
+                47,
+                45,
+                52,
+                49,
+                47,
+                53,
+                51,
+                48,
+                55,
+                52,
+                50,
+                57,
+                54,
+                52,
+                59,
+                56,
+                54,
+                61,
+                58,
+                60,
+                57,
+                62,
+                59,
+                63,
+                60,
+                64,
+                61,
+                65,
+                62,
+                66,
+                63,
+                67,
+                64,
+                68,
+                65,
+                69,
+                66,
+                70,
+                67,
+                71,
+                68,
+                72,
+                69,
+                73,
+                70
+              ]
+            }
+          ],
+          "caption": "Écart avant et après : +283 % sur les pages traitées, +18 % sur le témoin. L'écart des écarts est de +265 points, cohérent avec l'action. Une corrélation n'est pas une preuve de causalité, mais le groupe de contrôle écarte les explications qui frapperaient tout le site."
+        }
+      ]
+    },
+    {
+      "title": "Ce qu'il faut corriger",
+      "blocks": [
+        {
+          "type": "findings",
+          "items": [
+            {
+              "severity": "high",
+              "title": "Le catalogue produit est hors du champ de crawl des robots IA",
+              "evidence": "337 des 340 fiches produit n'ont reçu aucun passage vérifié en 31 jours.",
+              "action": "Vérifier que /produits/ n'est pas exclu du robots.txt, puis ajouter un lien depuis les 5 articles de blog les plus crawlés."
+            },
+            {
+              "severity": "medium",
+              "title": "11,5 % du trafic robot déclaré est usurpé",
+              "evidence": "208 requêtes portent un user agent de robot IA sans provenir d'une plage IP du fournisseur, dont 2 visent /wp-login.php.",
+              "action": "Ne jamais compter ces passages dans un rapport. Les bloquer au pare-feu si la charge devient un sujet."
+            },
+            {
+              "severity": "medium",
+              "title": "ClaudeBot reçoit trois 403 en dix millisecondes",
+              "evidence": "Signature d'un pare-feu applicatif qui bloque sans que personne ne l'ait décidé.",
+              "action": "Vérifier les règles WAF côté hébergeur, puis retester avec curl -A ClaudeBot."
+            },
+            {
+              "severity": "low",
+              "title": "Le temps de réponse servi aux robots est de 2,8 s",
+              "evidence": "Contre 210 ms pour les visiteurs humains sur les mêmes URL.",
+              "action": "Un TTFB de cet ordre fait abandonner le crawl. Vérifier si le cache exclut les user agents inconnus."
+            },
+            {
+              "severity": "info",
+              "title": "63 pages sont lues mais jamais citées",
+              "evidence": "Crawl répété sans aucune citation observée sur les 40 prompts testés.",
+              "action": "Auditer la citabilité au niveau du passage avant de produire du contenu neuf."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Méthode, limites et vérification",
+      "blocks": [
+        {
+          "type": "note",
+          "tone": "warn",
+          "title": "Ce que ce rapport ne peut pas montrer",
+          "text": "Un access log prouve qu'une page a été lue, jamais qu'elle a été citée. La colonne citations vient d'un relevé manuel sur 40 prompts, daté et reproductible, avec 3 répétitions par prompt. En dessous de 3 répétitions, un taux est une anecdote, pas une mesure."
+        },
+        {
+          "type": "code",
+          "label": "Vérifier vous-même en une ligne",
+          "text": "curl -A GPTBot -s -o /dev/null -w '%{http_code} %{time_total}s\\n' \\\n     https://boutique-escalade.fr/produits/"
+        },
+        {
+          "type": "checklist",
+          "title": "Protocole appliqué ce mois-ci",
+          "items": [
+            {
+              "label": "Access logs récupérés sur 31 jours complets",
+              "done": true
+            },
+            {
+              "label": "Vérification DNS inverse puis direct sur chaque IP",
+              "done": true
+            },
+            {
+              "label": "Relevé de citations sur 40 prompts, 3 répétitions",
+              "done": true
+            },
+            {
+              "label": "Groupe de contrôle constitué avant l'action",
+              "done": true
+            },
+            {
+              "label": "Contre-mesure robots.txt appliquée",
+              "done": false
+            },
+            {
+              "label": "Règles WAF vérifiées chez l'hébergeur",
+              "done": false
+            }
+          ]
+        },
+        {
+          "type": "keyvalue",
+          "title": "Paramètres du relevé",
+          "items": [
+            {
+              "label": "Format de log",
+              "value": "Nginx combined"
+            },
+            {
+              "label": "Lignes analysées",
+              "value": "1 284 991"
+            },
+            {
+              "label": "Moteurs testés",
+              "value": "ChatGPT, Perplexity, Gemini"
+            },
+            {
+              "label": "Prochain relevé",
+              "value": "8 octobre 2026"
+            }
+          ]
+        },
+        {
+          "type": "cta",
+          "title": "Reproduire cette mesure",
+          "text": "Les deux liens ci-dessous mènent aux outils qui ont produit ce rapport. Rien à acheter pour les utiliser.",
+          "links": [
+            {
+              "label": "Mesurer la même chose sur votre site (extension gratuite)",
+              "url": "https://wordpress.org/plugins/hack-the-seo/"
+            },
+            {
+              "label": "Produire ce rapport vous-même (trousse de skills)",
+              "url": "https://github.com/hacktheseo/wordpress-seo-skills"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.pyc
+out/
+*.local.json
+
+# Rendered deliverables never belong in the repository: they carry client data.
+# The two shipped examples are the exception, they are the shop window.
+*.findings.json
+*.report.html
+!examples/*.findings.json
+!examples/*.report.html

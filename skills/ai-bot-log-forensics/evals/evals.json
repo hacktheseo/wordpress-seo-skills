@@ -1,0 +1,60 @@
+{
+  "skill_name": "ai-bot-log-forensics",
+  "notes": "Every case is scored against a baseline run with the skill uninstalled. The baseline field records what that run produces, so the delta is the measurement. Fixtures are relative to this file.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Why does GA4 show no traffic from ChatGPT?",
+      "should_trigger": true,
+      "expected_output": "Explains that AI crawlers make one HTTP request and run no JavaScript, so no tag fires and no session exists, and that this is structural rather than a GA4 misconfiguration. Then asks for a server access log instead of guessing, and names where to find it. Does not recommend a GA4 setting, a filter or a custom event.",
+      "files": [],
+      "baseline": "Without the skill the model proposes GA4 referral filters, a custom channel group for chat.openai.com, or bot filtering settings, none of which can ever surface a crawler hit."
+    },
+    {
+      "id": 2,
+      "prompt": "Here is last month's access log. Which AI bots crawled the site, and are they real?",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/parse_logs.py on the file with --ip-ranges, then reads parsing and verification before quoting any figure. Reports GPTBot 6 claimed hits of which 2 spoofed on /wp-login.php and /xmlrpc.php, excluded from every other count, ClaudeBot 3 verified hits all answered 403, and CCBot 2 hits as unverifiable rather than as traffic. Renders the HTML deliverable with the shared engine.",
+      "files": [
+        "fixtures/access-sample.log",
+        "fixtures/ranges-sample.json"
+      ],
+      "baseline": "Without the skill the model greps the user agent strings, reports 17 AI bot hits including the 2 forged ones, and never mentions verification."
+    },
+    {
+      "id": 3,
+      "prompt": "J'ai recupere les logs serveur de mon site chez OVH. Est-ce que les robots IA passent dessus, et sur quelles pages ?",
+      "should_trigger": true,
+      "expected_output": "Reponse et livrable entierement en francais. Parse le format OVH avec le prefixe vhost sans configuration particuliere, separe entrainement et recuperation temps reel, produit un rapport HTML francais avec verdict, KPI, tableau des robots verifies, barres par section et matrice. Precise que la moitie citation est absente faute de releve.",
+      "files": [
+        "fixtures/access-sample.log"
+      ],
+      "baseline": "Sans la skill, le modele decrit la structure d'un access log, propose un one-liner grep sur GPTBot et ne verifie rien."
+    },
+    {
+      "id": 4,
+      "prompt": "On m'annonce 4 000 visites de GPTBot le mois dernier, ca me parait enorme. Comment savoir si c'est vrai ?",
+      "should_trigger": true,
+      "expected_output": "Explique qu'un user agent est declaratif et que n'importe qui peut envoyer GPTBot, puis decrit la verification par plages IP publiees et par DNS inverse suivi de DNS direct. Insiste sur le fait qu'un passage usurpe ne doit jamais entrer dans un chiffre client. Corrige aussi le mot visite: un passage de robot n'est ni une visite ni une session.",
+      "files": [],
+      "baseline": "Sans la skill, le modele confirme le chiffre ou parle vaguement de faux positifs, sans methode de verification et sans corriger le vocabulaire."
+    },
+    {
+      "id": 5,
+      "prompt": "How much referral traffic did I get from chat.openai.com in GA4 last month?",
+      "should_trigger": false,
+      "expected_output": "Does not fire. This is humans clicking a link in an answer, which GA4 records normally as a referral. The correct answer is a GA4 report, not a log audit. If the skill fires here it is over triggering and the description needs narrowing.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    },
+    {
+      "id": 6,
+      "prompt": "My guide ranks first on Google but Perplexity never cites it. Rewrite it so it gets cited.",
+      "should_trigger": false,
+      "expected_output": "Does not fire, or fires only to hand over. The page is reachable and the problem is citability at passage level, which belongs to ai-citability-audit. A log audit answers whether the page was read, and the user already knows it was.",
+      "files": [],
+      "baseline": "Not applicable, this case measures the boundary with the neighbouring skill."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the baseline answer explains that analytics cannot see AI crawlers and stops there: no log parsed, no user agent verified, no spoofed traffic separated out and no rendered deliverable."
+}
