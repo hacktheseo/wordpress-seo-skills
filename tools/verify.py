@@ -653,7 +653,10 @@ def check_new_fixtures(report):
 
 URL_RE = re.compile(r"https?://[^\s\)\"'`<>\]]+")
 URL_SKIP = ("example.com", "exemple.fr", "example.org", "localhost", "127.0.0.1",
-            "mon-site.fr", "a.fr", "b.fr", "site-one.com", "boutique-escalade.fr")
+            "mon-site.fr", "a.fr", "b.fr", "site-one.com", "boutique-escalade.fr",
+            # Gemini hands out one shot redirect links; the ones in the fixture
+            # are made up, and the real ones expire.
+            "vertexaisearch.cloud.google.com")
 
 
 def check_urls(report):
