@@ -1,0 +1,55 @@
+{
+  "skill_name": "llmstxt-governance",
+  "notes": "Every case is scored against a baseline run with the skill uninstalled. Fixtures are relative to this file and describe one French WooCommerce shop: its robots.txt, the llms.txt its plugin generates, a sitemap, a Pages export and a month of access log.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We want to show up in ChatGPT and Perplexity answers, but we don't want our content used to train models. What should our robots.txt say?",
+      "should_trigger": true,
+      "expected_output": "Explains the three purposes (training, search, user fetch), recommends cite-not-train for a content business, runs scripts/ai_access.py policy and gives the block: GPTBot, ClaudeBot, Google-Extended, CCBot and other training tokens refused, OAI-SearchBot, Claude-SearchBot and PerplexityBot allowed. States that GPTBot and OAI-SearchBot must sit in separate groups, that Google-Extended does not affect AI Overviews, and that user-triggered fetchers of several providers may ignore robots.txt.",
+      "files": [],
+      "baseline": "Without the skill the model often puts GPTBot and OAI-SearchBot under one Disallow, or blocks ChatGPT-User believing it stops training."
+    },
+    {
+      "id": 2,
+      "prompt": "Voici le robots.txt et le llms.txt de la boutique d'un client. Est-ce que tout est cohérent pour les IA ?",
+      "should_trigger": true,
+      "expected_output": "Réponse et rapport en français. audit --shop trouve : OAI-SearchBot refusé dans le même groupe que GPTBot (plus de citation dans la recherche ChatGPT), la règle ChatGPT-User que l'éditeur dit pouvoir ignorer, panier et commande ouverts aux robots d'IA, un llms.txt de 134 liens et 31 Ko avec un lien vers la préproduction, la FAQ refusée par robots.txt mais listée dans llms.txt, le panier et le compte listés, pas de résumé en citation, une règle hors de tout groupe. Verdict : La recherche de ChatGPT ne peut pas lire ce site.",
+      "files": ["fixtures/robots.txt", "fixtures/llms.txt", "fixtures/sitemap.xml"],
+      "baseline": "Sans la skill, le modèle commente chaque fichier séparément et ne voit ni la contradiction sur la FAQ ni l'effet du groupe partagé GPTBot et OAI-SearchBot."
+    },
+    {
+      "id": 3,
+      "prompt": "Est-ce que mon fichier llms.txt sert à quelque chose ? Voici un mois de logs.",
+      "should_trigger": true,
+      "expected_output": "Réponse en français. Compte avec --log : les robots d'IA ont demandé llms.txt 1 fois et robots.txt 105 fois dans le mois (agents déclarés, non vérifiés). Cite la position de Google (le fichier est ignoré par la recherche Google) et l'étude Ahrefs (97 % des fichiers sans aucune requête). Conclut qu'on le garde court et cohérent, sans en attendre de trafic, et renvoie à ai-bot-log-forensics pour vérifier les robots.",
+      "files": ["fixtures/access.log", "fixtures/llms.txt"],
+      "baseline": "Sans la skill, le modèle présente llms.txt comme le robots.txt des IA et recommande de l'enrichir pour être cité."
+    },
+    {
+      "id": 4,
+      "prompt": "Generate a clean llms.txt for this shop from its key pages and its Search Console export.",
+      "should_trigger": true,
+      "expected_output": "Runs llms with the key pages file and the Pages export: 8 links, the four key pages with their titles then the best pages by clicks, the cart and the account dropped. Warns that the plugin already generates a file and that two generators conflict.",
+      "files": ["fixtures/key-pages.txt", "fixtures/pages-gsc.csv"],
+      "baseline": "Without the skill the model writes a long llms.txt by hand listing every page of the sitemap, the cart included."
+    },
+    {
+      "id": 5,
+      "prompt": "Analyse mes logs serveur pour savoir si GPTBot vient vraiment ou si c'est un faux.",
+      "should_trigger": false,
+      "expected_output": "Ne se déclenche pas, ou passe la main : vérifier des passages de robots dans un log est le travail de ai-bot-log-forensics.",
+      "files": [],
+      "baseline": "Not applicable, this case measures the boundary with the neighbouring skill."
+    },
+    {
+      "id": 6,
+      "prompt": "How do I create an XML sitemap for my WordPress site?",
+      "should_trigger": false,
+      "expected_output": "Does not fire. A sitemap is not an AI access decision.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the model knows the main AI user agents but groups them wrongly, overstates what llms.txt does, and never evaluates robots.txt rule by rule against the pages the llms.txt promotes."
+}

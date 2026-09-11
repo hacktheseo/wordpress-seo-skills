@@ -1,0 +1,54 @@
+{
+ "id": "resp_1",
+ "output": [
+  {
+   "type": "web_search_call",
+   "id": "ws_1",
+   "status": "completed",
+   "action": {
+    "type": "search",
+    "query": "avocat licenciement Lyon",
+    "sources": [
+     {
+      "type": "url",
+      "url": "https://lemaire-avocats.exemple.fr/licenciement/"
+     },
+     {
+      "type": "url",
+      "url": "https://cabinet-vandel.exemple.fr/licenciement-economique/"
+     },
+     {
+      "type": "url",
+      "url": "https://pagesjaunes.exemple.fr/avocats-lyon"
+     }
+    ]
+   }
+  },
+  {
+   "type": "message",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "Pour un licenciement à Lyon, plusieurs cabinets reviennent souvent : Lemaire Avocats, spécialisé en droit social, et Atelier Vandel, qui publie un guide détaillé sur la procédure.",
+     "annotations": [
+      {
+       "type": "url_citation",
+       "url": "https://lemaire-avocats.exemple.fr/licenciement/",
+       "title": "Lemaire",
+       "start_index": 80,
+       "end_index": 95
+      },
+      {
+       "type": "url_citation",
+       "url": "https://cabinet-vandel.exemple.fr/licenciement-economique/",
+       "title": "Guide",
+       "start_index": 120,
+       "end_index": 150
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

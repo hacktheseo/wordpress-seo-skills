@@ -49,6 +49,22 @@ default 30.
 | `hack-the-seo-llmstxt-get` | The `llms.txt` the site serves to AI agents |
 | `hack-the-seo-site-health` | Result of the **last** local health check, not a fresh one |
 
+## What three of them return
+
+Read from the source of 1.1.2. None declares an output schema, so these are
+the keys the code builds. All three take no parameter.
+
+| Tool | Returns | Limits |
+|---|---|---|
+| `hack-the-seo-redirects-list` | `count`, `rules[]` with `source`, `target`, `type` (int), `is_regex`, `enabled`, `hits`, `last_hit` | 200 rules, most hit first, disabled rules included |
+| `hack-the-seo-notfound-log` | `count`, `urls[]` with `url`, `hits`, `is_external` (the referer is another site), `first_seen`, `last_seen` | 100 URLs, most hit first. Rows already redirected or ignored are included, without their status |
+| `hack-the-seo-llmstxt-get` | `url`, `content` | Returns the generated file **even when the llms.txt module is switched off**: fetch `/llms.txt` itself to know what is served |
+
+Before the first 404 or the first rule, the first two answer
+`{"state": "no_data"}` with an empty list: that is an empty log, not an error.
+Paths in the 404 log have their query string stripped, and the IP is only ever
+stored hashed.
+
 ## What is not there, and what to do instead
 
 There is no write path at all, by design. There is no Search Console data, no

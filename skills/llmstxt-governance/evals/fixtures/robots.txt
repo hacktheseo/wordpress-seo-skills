@@ -1,0 +1,23 @@
+# robots.txt, Boutique Grimpe (WordPress + WooCommerce)
+Disallow: /tmp/
+
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Disallow: /faq/
+
+# added in 2024 "to stop OpenAI"
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /blog/
+
+Sitemap: https://www.boutique.exemple.fr/sitemap_index.xml

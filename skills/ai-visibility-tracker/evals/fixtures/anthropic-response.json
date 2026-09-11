@@ -1,0 +1,39 @@
+{
+ "id": "msg_1",
+ "type": "message",
+ "role": "assistant",
+ "content": [
+  {
+   "type": "server_tool_use",
+   "id": "srvtoolu_1",
+   "name": "web_search",
+   "input": {
+    "query": "consultation avocat visio Vandel"
+   }
+  },
+  {
+   "type": "web_search_tool_result",
+   "tool_use_id": "srvtoolu_1",
+   "content": [
+    {
+     "type": "web_search_result",
+     "url": "https://cabinet-vandel.exemple.fr/contact/",
+     "title": "Contact",
+     "page_age": "2026-08-01"
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "text": "Oui, le Cabinet Vandel propose des rendez-vous en visioconférence.",
+   "citations": [
+    {
+     "type": "web_search_result_location",
+     "url": "https://cabinet-vandel.exemple.fr/contact/",
+     "title": "Contact",
+     "cited_text": "en visioconférence"
+    }
+   ]
+  }
+ ]
+}

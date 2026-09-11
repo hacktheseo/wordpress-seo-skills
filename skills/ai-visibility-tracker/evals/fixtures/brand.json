@@ -1,0 +1,29 @@
+{
+  "name": "Atelier Vandel",
+  "aliases": [
+    "Cabinet Vandel",
+    "Vandel Avocats"
+  ],
+  "domain": "cabinet-vandel.exemple.fr",
+  "competitors": [
+    {
+      "name": "Lemaire Avocats",
+      "aliases": [
+        "Cabinet Lemaire"
+      ],
+      "domain": "lemaire-avocats.exemple.fr"
+    },
+    {
+      "name": "JuriFacile",
+      "aliases": [],
+      "domain": "jurifacile.exemple.fr"
+    },
+    {
+      "name": "Maître Durand",
+      "aliases": [
+        "Durand Associés"
+      ],
+      "domain": "durand-associes.exemple.fr"
+    }
+  ]
+}

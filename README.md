@@ -4,10 +4,12 @@ For the WordPress agency: the report your client receives about the AI answer
 engines, delivered as one self-contained HTML file you can email, print, or put
 your own brand on.
 
-Four skills. They read your server logs to find which AI crawlers actually came and
+Eight skills. They read your server logs to find which AI crawlers actually came and
 which of them were forged, score a page passage by passage for what a model can
-quote, turn that into a 90 day plan, and produce the monthly client report you
-currently assemble by hand.
+quote, turn that into a 90 day plan, measure how often the answer engines name the
+brand and which sources they cite instead, decide what the site opens to AI crawlers,
+plan and prove a migration, drive whichever SEO plugin the site already runs, and
+produce the monthly client report you currently assemble by hand.
 
 ![A rendered AI crawler forensics report](examples/ai-crawler-forensics.png)
 
@@ -68,10 +70,15 @@ real user question.
 | [`ai-citability-audit`](skills/ai-citability-audit) | Splits a page into passages and scores each one out of 100 on nine observable criteria: self-containment, direct answer, factual density, attribution, length, question form, technical extractability, freshness, internal competition. Rewrites the five weakest, showing before and after. | One public URL, nothing else | 2 min |
 | [`geo-strategy-map`](skills/geo-strategy-map) | Builds a prompt map from material you already own (Search Console, support questions, forums), a measurement protocol you can repeat identically in thirty days, an entity diagnosis, and a 90 day plan capped at twelve actions. | A manual survey across 3 answer engines, about half a day. The plan depends on it, there is no shortcut | half a day |
 | [`seo-portfolio-report`](skills/seo-portfolio-report) | Monthly reporting across a portfolio of sites, plus the part nobody else does: proof of impact. Before and after with a control group, changepoint detection, difference in differences, and a refusal to conclude when the window is too short. | Your Search Console exports, for the period and the one before it | 30 min |
+| [`ai-visibility-tracker`](skills/ai-visibility-tracker) | How often ChatGPT, Perplexity, Gemini and Claude name the brand, with a 95 % interval on every rate, share of voice against competitors, signal or noise between two waves, and the source gap: the domains the engines cite, run after run, when the brand is absent. That list is the work plan. | A survey by hand, your own API keys, a tracker export, or AVA on the paid plugin | 20 min with keys |
+| [`llmstxt-governance`](skills/llmstxt-governance) | Reads robots.txt, llms.txt and the newer signals the way a crawler does, for 22 AI user agents grouped by purpose, finds the contradictions between them, and writes the policy the owner picks as a robots.txt block proved against the same evaluator, plus a short llms.txt. | A public URL | 5 min |
+| [`seo-migration-redirects`](skills/seo-migration-redirects) | Builds the redirect map from the old and new inventories and learns the restructure's patterns, lints chains and loops, exports for Redirection, Yoast, Rank Math, SEOPress, Apache or Nginx, tests every hop on the server and reads the landing page for a leftover noindex, sorts the 404s, and proves the before and after against the site's own trend. | Old sitemap or Search Console export, the staging sitemap | 30 min |
+| [`wp-seo-plugin-driver`](skills/wp-seo-plugin-driver) | Detects Yoast, Rank Math, AIOSEO or SEOPress from the outside, photographs what every page renders, turns a change list into the one call each plugin documents, sends nothing without approval, and proves the result on the rendered page. The parity check for a plugin switch. | A URL, then an application password for the changes | 10 min |
 
-Every skill runs on any WordPress site, with or without our plugin. Three of the four
-never need it at all. What none of them need is an account with us, an API key, or a
-credit card.
+Every skill runs on any WordPress site, with or without our plugin. Three do more
+with it, none needs it. What none of them need is an account with us or a credit card.
+The two that can use credentials, your own API keys or an application password on your
+own site, read them from your environment and never write them anywhere.
 
 ## Install
 
@@ -106,7 +113,7 @@ cp -r wordpress-seo-skills/skills/* ~/.claude/skills/
 
 That is enough on its own: every skill ships the report engine in its own
 `scripts/` folder and falls back to `shared/report-engine/` only if it is there.
-Copy one skill folder or all four, both work.
+Copy one skill folder or all eight, both work.
 
 ## Just say this
 
@@ -124,12 +131,25 @@ When measuring is not the question any more:
 > "We measure 12% brand presence in AI answers with Profound. Now what do we actually do about it?"
 > "Je veux une strategie pour etre cite par les IA. On vend un logiciel de facturation en France et on n'apparait jamais dans ChatGPT."
 
+Before and after a redesign:
+> "The redirects are installed on staging. Test them before we switch the DNS."
+> "Depuis la refonte du 15 juillet le trafic a baissé et on a plein de 404. Il faut un rapport pour le client."
+
+When the question is who may read the site:
+> "We want to show up in ChatGPT and Perplexity answers, but we don't want our content used to train models. What should our robots.txt say?"
+> "Est-ce que mon fichier llms.txt sert à quelque chose ? Voici un mois de logs."
+
+On a site that runs someone else's SEO plugin:
+> "Which SEO plugin runs on this client site, and can I change meta descriptions through the API without logging into the admin?"
+> "On vient de passer ce site client de Yoast à Rank Math. Est-ce qu'on a perdu quelque chose ?"
+
 At the end of the month:
 > "I run an agency with 6 WordPress clients. I need the monthly reports for August, one per client plus something for my team."
 > "Il me faut le rapport mensuel client pour mes 4 sites, en marque blanche avec le logo de mon agence."
+> "Here is our September survey of AI answers and the June one. Did our visibility in ChatGPT and Perplexity actually improve?"
 
 Every one of these is an evaluation case in the repository, so they are tested, not
-invented. `python3 tools/verify.py --sheet` prints all 23 of them.
+invented. `python3 tools/verify.py --sheet` prints all 47 of them.
 
 ## What you get out of every skill
 
@@ -179,12 +199,13 @@ If you find others, open an issue and we will link them.
 
 ## With the Hack The SEO plugin
 
-Three of the four skills need nothing. `seo-portfolio-report` does more when the
+No skill needs it. `seo-portfolio-report` and `seo-migration-redirects` do more when the
 [free plugin](https://wordpress.org/plugins/hack-the-seo/) is installed, because some
 data cannot be obtained by crawling a site from the outside: server side AI crawler
-hits, a GEO score computed in PHP on the server, keyword cannibalization, and a
-Markdown version of each page at `/your-page.md` which is much closer to what a model
-actually reads than the rendered HTML.
+hits, a GEO score computed in PHP on the server, keyword cannibalization, the 404 log
+and the redirect rules, and a Markdown version of each page at `/your-page.md` which is
+much closer to what a model actually reads than the rendered HTML.
+`ai-visibility-tracker` reads AVA's measurements on sites running the paid plugin.
 
 The free plugin is a separate extension from our paid one, it does not expire, and it
 is not a trial. When it is absent, the skills say in one line what they could not do
@@ -224,7 +245,7 @@ be exercised without a real client site.
 
 ## Contributing
 
-Not open yet. We are running the first four skills against real client sites before
+Not open yet. We are running the skills against real client sites before
 taking outside changes, so that a contribution has a standard to be measured against.
 [CONTRIBUTING.md](CONTRIBUTING.md) describes what will be expected and how to signal
 interest in the meantime. Issues and bug reports are welcome now.
@@ -239,13 +260,15 @@ Built by [Hack The SEO](https://hacktheseo.com).
 
 # Skills SEO et GEO pour WordPress
 
-Quatre skills pour la partie de WordPress que les skills officielles ne couvrent pas :
+Huit skills pour la partie de WordPress que les skills officielles ne couvrent pas :
 le référencement.
 
 Elles lisent les logs serveur pour retrouver et vérifier les passages de robots IA,
 notent une page passage par passage sur ce qu'un modèle peut réellement citer, en
-tirent un plan à 90 jours, et produisent le rapport client mensuel qu'une agence
-assemble aujourd'hui à la main. Chaque analyse se termine par un fichier HTML
+tirent un plan à 90 jours, mesurent la présence de la marque dans les réponses des IA
+et les sources citées à sa place, décident ce que le site ouvre aux robots d'IA,
+préparent et prouvent une migration, pilotent l'extension SEO déjà installée, et
+produisent le rapport client mensuel qu'une agence assemble aujourd'hui à la main. Chaque analyse se termine par un fichier HTML
 autonome, à envoyer, à imprimer, ou à mettre à votre marque.
 
 ## Pourquoi
@@ -272,6 +295,10 @@ structurellement aveugle. La seule trace est une ligne dans un access log.
 | `ai-citability-audit` | Découpe la page en passages et note chacun sur 100 selon neuf critères observables. Réécrit les cinq plus faibles, avec l'avant et l'après. | Aucun |
 | `geo-strategy-map` | Carte des prompts construite à partir de votre matière (Search Console, questions du support, forums), protocole de mesure reproductible, diagnostic d'entité, plan à 90 jours plafonné à douze actions. | Aucun |
 | `seo-portfolio-report` | Reporting mensuel sur un portefeuille de sites, et la preuve d'impact que personne d'autre ne fait : avant/après avec groupe de contrôle, détection de rupture, double différence, et un refus de conclure quand la fenêtre est trop courte. | Aucun, davantage avec le plugin |
+| `ai-visibility-tracker` | Fréquence à laquelle ChatGPT, Perplexity, Gemini et Claude nomment la marque, avec un intervalle sur chaque taux, part de voix face aux concurrents, signal ou bruit entre deux mesures, et les sources qui répondent à la place de la marque quand elle est absente. | Un relevé, vos clés d'API, un export d'outil, ou AVA |
+| `llmstxt-governance` | Lit robots.txt, llms.txt et les nouveaux signaux comme un robot, pour 22 robots d'IA classés par usage, trouve leurs contradictions, et écrit la politique choisie par le propriétaire, vérifiée par le même évaluateur. | Aucun |
+| `seo-migration-redirects` | Plan de redirection construit à partir des deux inventaires, motifs de la refonte appris, chaînes et boucles détectées, export pour Redirection, Yoast, Rank Math, SEOPress, Apache ou Nginx, test de chaque saut sur le serveur avec lecture du noindex d'arrivée, tri des 404, preuve avant/après. | Aucun, davantage avec le plugin |
+| `wp-seo-plugin-driver` | Détecte Yoast, Rank Math, AIOSEO ou SEOPress depuis l'extérieur, photographie ce que chaque page affiche, transforme une liste de changements en l'appel que chaque extension documente, n'envoie rien sans accord, et prouve le résultat sur la page. | Une URL, puis un mot de passe d'application |
 
 ## Installation
 

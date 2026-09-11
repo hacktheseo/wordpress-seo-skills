@@ -359,8 +359,9 @@ def check_skill(name, report):
 
     for case in cases:
         for fixture in case.get("files") or []:
+            # a fixture may be a folder of files (saved pages, a site tree)
             found = any(
-                os.path.isfile(os.path.join(path, "evals", d, fixture))
+                os.path.exists(os.path.join(path, "evals", d, fixture))
                 for d in ("", "fixtures")
             )
             if not found:
@@ -494,8 +495,164 @@ def check_fixture_numbers(report):
         shutil.rmtree(workdir, ignore_errors=True)
 
 
+# Regression figures for the fixtures of the second lot of skills. Same idea
+# as FIXTURE_TOTALS: each number is a statement a client report would make.
+# If one changes, find out why before shipping.
+MIGRATION_DECISIONS = {"redirect": 20, "review": 3, "manual": 4, "gone": 1}
+MIGRATION_LIVE = {"ok": 12, "gone_ok": 1, "noindex_target": 1, "canonical_elsewhere": 1,
+                  "broken_target": 1, "loop": 1, "home_target": 1, "not_redirected": 1,
+                  "temporary": 1, "chain": 1}
+DRIVER_DIFF = {"became_noindex": 1, "canonical_changed": 1, "description_lost": 1,
+               "schema_lost": 1, "title_changed": 1}
+TRACKER = {"answers": 180, "cited": 54, "core": 7, "signal": ["family:implementation"]}
+
+
+def free_port():
+    import socket
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = sock.getsockname()[1]
+    sock.close()
+    return port
+
+
+def run_json(cmd, out):
+    run = subprocess.run([sys.executable] + cmd, capture_output=True, text=True, timeout=180)
+    if run.returncode != 0 or not os.path.isfile(out):
+        return None, (run.stderr.strip() or run.stdout.strip())[-90:]
+    return json.load(open(out, encoding="utf-8")), ""
+
+
+def check_new_fixtures(report):
+    name = "assertions"
+    work = tempfile.mkdtemp(prefix="verify-lot2-")
+    try:
+        # seo-migration-redirects
+        skill = os.path.join(SKILLS, "seo-migration-redirects")
+        if os.path.isdir(skill):
+            fx = os.path.join(skill, "evals", "fixtures")
+            rm = os.path.join(skill, "scripts", "redirect_map.py")
+            mp = os.path.join(work, "map.csv")
+            build, err = run_json([rm, "build", "--old", os.path.join(fx, "gsc-before-Pages.csv"),
+                                   "--new", os.path.join(fx, "new-sitemap.xml"), "--out", mp,
+                                   "--json", os.path.join(work, "build.json"), "--quiet"],
+                                  os.path.join(work, "build.json"))
+            if build is None:
+                report.fail(name, "migration map builds on the fixture", err)
+            elif build.get("decisions") != MIGRATION_DECISIONS:
+                report.fail(name, "migration map decisions", "got %s" % build.get("decisions"))
+            else:
+                report.ok(name, "migration map decisions", ", ".join("%s %d" % kv for kv in MIGRATION_DECISIONS.items()))
+            if build is not None:
+                lint, err = run_json([rm, "lint", mp, "--new", os.path.join(fx, "new-sitemap.xml"),
+                                      "--existing", os.path.join(fx, "existing-rules.json"),
+                                      "--json", os.path.join(work, "lint.json"), "--quiet"],
+                                     os.path.join(work, "lint.json"))
+                types = (lint or {}).get("issues_by_type", {})
+                if types.get("existing_chain") == 1 and types.get("existing_dead_target") == 1:
+                    report.ok(name, "migration lint sees the old rules", "1 chain, 1 dead target")
+                else:
+                    report.fail(name, "migration lint sees the old rules", err or str(types))
+                mock = os.path.join(fx, "mock_site.py")
+                port = free_port()
+                server = subprocess.Popen([sys.executable, mock, str(port)],
+                                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                try:
+                    import socket
+                    import time
+                    for _ in range(50):
+                        try:
+                            socket.create_connection(("127.0.0.1", port), timeout=0.2).close()
+                            break
+                        except OSError:
+                            time.sleep(0.1)
+                    live, err = run_json([os.path.join(skill, "scripts", "check_live.py"), mp,
+                                          "--old-base", "http://127.0.0.1:%d" % port,
+                                          "--expect-base", "http://localhost:%d" % port,
+                                          "--rate", "0", "--out", os.path.join(work, "live.json"), "--quiet"],
+                                         os.path.join(work, "live.json"))
+                finally:
+                    server.terminate()
+                    server.wait(timeout=10)
+                verdicts = (live or {}).get("verdicts", {})
+                if verdicts == MIGRATION_LIVE:
+                    report.ok(name, "live check finds every planted defect", "12 ok, 8 defects, 1 gone")
+                else:
+                    report.fail(name, "live check finds every planted defect", err or str(verdicts))
+
+        # wp-seo-plugin-driver
+        skill = os.path.join(SKILLS, "wp-seo-plugin-driver")
+        if os.path.isdir(skill):
+            fx = os.path.join(skill, "evals", "fixtures")
+            drv = os.path.join(skill, "scripts", "seo_driver.py")
+            snaps = []
+            for side in ("before", "after"):
+                out = os.path.join(work, side + ".json")
+                subprocess.run([sys.executable, drv, "snapshot", os.path.join(fx, side), "--out", out, "--quiet"],
+                               capture_output=True, text=True, timeout=60)
+                snaps.append(out)
+            diff, err = run_json([drv, "diff", snaps[0], snaps[1], "--json", os.path.join(work, "diff.json"),
+                                  "--quiet"], os.path.join(work, "diff.json"))
+            if diff and diff.get("by_type") == DRIVER_DIFF:
+                report.ok(name, "plugin switch diff", "5 changes, 3 serious")
+            else:
+                report.fail(name, "plugin switch diff", err or str((diff or {}).get("by_type")))
+
+        # llmstxt-governance
+        skill = os.path.join(SKILLS, "llmstxt-governance")
+        if os.path.isdir(skill):
+            fx = os.path.join(skill, "evals", "fixtures")
+            audit, err = run_json([os.path.join(skill, "scripts", "ai_access.py"), "audit",
+                                   "--robots", os.path.join(fx, "robots.txt"), "--llms", os.path.join(fx, "llms.txt"),
+                                   "--sitemap", os.path.join(fx, "sitemap.xml"), "--site", "https://www.boutique.exemple.fr",
+                                   "--log", os.path.join(fx, "access.log"), "--shop",
+                                   "--json", os.path.join(work, "audit.json"), "--quiet"],
+                                  os.path.join(work, "audit.json"))
+            checks = {c["type"]: c for c in (audit or {}).get("checks", [])}
+            wanted = ("chatgpt_search_blocked", "llms_offhost", "llms_contradiction", "user_fetcher_rule",
+                      "transactional_open", "llms_too_long")
+            missing = [w for w in wanted if w not in checks]
+            if audit and not missing and checks["llms_contradiction"]["count"] == 1:
+                report.ok(name, "AI access audit finds the contradictions", "%d checks" % len(checks))
+            else:
+                report.fail(name, "AI access audit finds the contradictions", err or "missing %s" % missing)
+            for preset in ("open", "cite-not-train", "closed"):
+                out = os.path.join(work, "robots-%s.txt" % preset)
+                run = subprocess.run([sys.executable, os.path.join(skill, "scripts", "ai_access.py"), "policy",
+                                      "--preset", preset, "--shop", "--signal", "--out", out, "--quiet"],
+                                     capture_output=True, text=True, timeout=60)
+                if run.returncode != 0:
+                    report.fail(name, "policy %s proves itself" % preset, run.stderr.strip()[-80:])
+                    break
+            else:
+                report.ok(name, "every policy preset proves itself", "open, cite-not-train, closed")
+
+        # ai-visibility-tracker
+        skill = os.path.join(SKILLS, "ai-visibility-tracker")
+        if os.path.isdir(skill):
+            fx = os.path.join(skill, "evals", "fixtures")
+            vis, err = run_json([os.path.join(skill, "scripts", "visibility.py"),
+                                 os.path.join(fx, "survey-september.csv"), "--baseline", os.path.join(fx, "survey-june.csv"),
+                                 "--brand", os.path.join(fx, "brand.json"), "--json", os.path.join(work, "vis.json"),
+                                 "--quiet"], os.path.join(work, "vis.json"))
+            if vis is None:
+                report.fail(name, "visibility fixture", err)
+            else:
+                r = vis["result"]
+                core = sum(1 for g in r["source_gap"] if g["stability"] == "core")
+                signals = [k for k, c in (vis.get("comparison") or {}).items() if c and c["verdict"] == "signal"]
+                if (r["overall"]["answers"], r["overall"]["cited"], core, signals) == (
+                        TRACKER["answers"], TRACKER["cited"], TRACKER["core"], TRACKER["signal"]):
+                    report.ok(name, "visibility rates, source gap and signal", "54 of 180, 7 core, 1 signal")
+                else:
+                    report.fail(name, "visibility rates, source gap and signal",
+                                "got %s of %s, %d core, signals %s" % (r["overall"]["cited"], r["overall"]["answers"], core, signals))
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+
 URL_RE = re.compile(r"https?://[^\s\)\"'`<>\]]+")
-URL_SKIP = ("example.com", "exemple.fr", "example.org", "localhost",
+URL_SKIP = ("example.com", "exemple.fr", "example.org", "localhost", "127.0.0.1",
             "mon-site.fr", "a.fr", "b.fr", "site-one.com", "boutique-escalade.fr")
 
 
@@ -525,7 +682,7 @@ def check_urls(report):
                 url = match.group(0).rstrip(".,;:")
                 if not any(bad in url for bad in URL_SKIP):
                     urls.add(url)
-    bad = []
+    bad, refused = [], []
     for url in sorted(urls):
         run = subprocess.run(
             ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}",
@@ -533,7 +690,7 @@ def check_urls(report):
             capture_output=True, text=True,
         )
         code = (run.stdout or "").strip()
-        if code in ("405", "403", "000"):  # HEAD refused, retry with a ranged GET
+        if code in ("405", "404", "403", "000"):  # HEAD refused or mishandled, retry with a ranged GET
             run = subprocess.run(
                 ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}",
                  "-L", "--max-time", "15", "-A", "hacktheseo-verify/1.0",
@@ -545,12 +702,26 @@ def check_urls(report):
             status = int(code)
         except ValueError:
             status = 0
-        if status == 0 or status >= 400:
+        # 401, 403 and 429 mean the host is up and refuses a script: many
+        # documentation sites sit behind bot protection. That is not a dead
+        # link, which is what this check exists to catch (404, 410, 5xx, no
+        # answer at all). They are counted and named, never hidden.
+        if status in (401, 403, 429):
+            refused.append(urlsplit_host(url))
+        elif status == 0 or status >= 400:
             bad.append("%s -> %s" % (url, code or "no answer"))
     if bad:
         report.fail(name, "every documented URL answers", "; ".join(bad[:4]))
     else:
-        report.ok(name, "every documented URL answers", "%d checked" % len(urls))
+        detail = "%d checked" % len(urls)
+        if refused:
+            detail += ", %d refused a script (%s)" % (len(refused), ", ".join(sorted(set(refused))[:4]))
+        report.ok(name, "every documented URL answers", detail)
+
+
+def urlsplit_host(url):
+    match = re.match(r"https?://([^/]+)", url)
+    return match.group(1) if match else url
 
 
 def check_repo(report):
@@ -678,6 +849,7 @@ def main(argv):
     check_repo(report)
     check_engine(report)
     check_fixture_numbers(report)
+    check_new_fixtures(report)
     if "--no-urls" not in argv:
         check_urls(report)
     for name in names:

@@ -1,0 +1,4 @@
+https://www.boutique.exemple.fr/ | Accueil, matériel d'escalade et de bloc
+https://www.boutique.exemple.fr/a-propos/ | Qui nous sommes, l'atelier de Lyon
+https://www.boutique.exemple.fr/faq/ | Livraison, retours, garanties légales
+https://www.boutique.exemple.fr/contact/ | Contact et service client

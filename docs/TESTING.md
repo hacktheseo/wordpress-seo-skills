@@ -108,6 +108,80 @@ python3 scripts/segment_passages.py --help
 
 This one needs a page, so point it at any URL you control.
 
+```bash
+# seo-migration-redirects: a redesign with a domain change, end to end
+cd skills/seo-migration-redirects/evals/fixtures
+S=../../scripts
+python3 $S/redirect_map.py build --old gsc-before-Pages.csv --new new-sitemap.xml \
+    --out /tmp/map.csv --json /tmp/build.json
+python3 $S/redirect_map.py lint /tmp/map.csv --new new-sitemap.xml \
+    --existing existing-rules.json --json /tmp/lint.json
+python3 $S/redirect_map.py hunt notfound-log.json --map /tmp/map.csv \
+    --new new-sitemap.xml --json /tmp/hunt.json
+python3 mock_site.py 8765 &
+python3 $S/check_live.py /tmp/map.csv --old-base http://127.0.0.1:8765 \
+    --expect-base http://localhost:8765 --rate 0 --out /tmp/live.json
+kill %1
+python3 $S/migration_proof.py --map /tmp/map.csv --before gsc-before-Pages.csv \
+    --after gsc-after-Pages-new.csv gsc-after-Pages-old.csv --dates gsc-Dates.csv \
+    --launch 2026-07-15 --live /tmp/live.json --lint /tmp/lint.json --hunt /tmp/hunt.json \
+    --lang fr --findings /tmp/migration.json
+```
+
+Expect 28 old URLs: 20 redirect, 3 review, 4 manual, 1 gone, and two learned
+patterns (`/produit/*` to `/boutique/*`, `/category/*` to `/blog/*`) each with one
+exception. The lint finds one existing rule turned into a chain. The hunt sets
+aside 4 scanner probes and groups two `/en/en/` URLs. The live check on the mock
+site returns 12 ok, 1 gone_ok and 8 defects, one of each kind the mock plants:
+the one that matters is a correct redirect landing on a page still in noindex.
+
+```bash
+# wp-seo-plugin-driver: a Yoast to Rank Math switch, six pages
+cd skills/wp-seo-plugin-driver/evals/fixtures
+S=../../scripts/seo_driver.py
+python3 $S snapshot before --out /tmp/before.json
+python3 $S snapshot after --out /tmp/after.json
+python3 $S diff /tmp/before.json /tmp/after.json --json /tmp/diff.json
+python3 $S detect https://www.cabinet-vandel.exemple.fr --html after/accueil.html \
+    --index wp-json-rankmath.json --json /tmp/detect.json
+python3 $S plan changes.csv --detect /tmp/detect.json --snapshot /tmp/after.json --out-dir /tmp/plan
+```
+
+Expect five differences: one page became noindex, one canonical moved to the
+preproduction host, one description lost, one Article schema lost, one title
+separator changed. The plan writes five `rankmath/v1/updateMeta` calls with the
+post ids read from the page heads, and sends nothing.
+
+```bash
+# llmstxt-governance: a shop whose robots.txt and llms.txt disagree
+cd skills/llmstxt-governance/evals/fixtures
+S=../../scripts/ai_access.py
+python3 $S audit --robots robots.txt --llms llms.txt --sitemap sitemap.xml \
+    --site https://www.boutique.exemple.fr --log access.log --shop --json /tmp/audit.json
+python3 $S policy --preset open --site https://www.boutique.exemple.fr --shop --out /tmp/robots.txt
+```
+
+Expect OAI-SearchBot refused (it shares GPTBot's group), one llms.txt link on
+another host, one llms.txt page refused by robots.txt, and llms.txt requested
+once by an AI user agent in a month against 105 requests for robots.txt. The
+policy command re-reads its own file and confirms every token lands where the
+preset says.
+
+```bash
+# ai-visibility-tracker: two waves, 180 answers each
+cd skills/ai-visibility-tracker/evals/fixtures
+python3 ../../scripts/visibility.py survey-september.csv --baseline survey-june.csv \
+    --brand brand.json --json /tmp/vis.json
+for e in openai perplexity gemini anthropic; do
+  python3 ../../scripts/run_survey.py --parse $e-response.json --engine $e --brand brand.json
+done
+```
+
+Expect 54 of 180 answers, 30 % with an interval of 23.8 to 37.1 %, every change
+marked noise except the implementation family (+31 points, interval +11 to +48,
+signal), and seven core domains in the source gap. Each of the four saved API
+answers parses with a search detected and its sources extracted.
+
 ## Level 3, what only a person can judge
 
 ### Install first

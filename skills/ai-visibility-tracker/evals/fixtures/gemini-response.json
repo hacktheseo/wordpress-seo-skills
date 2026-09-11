@@ -1,0 +1,33 @@
+{
+ "candidates": [
+  {
+   "content": {
+    "parts": [
+     {
+      "text": "Maître Durand et Lemaire Avocats sont souvent cités pour les prud'hommes à Lyon."
+     }
+    ],
+    "role": "model"
+   },
+   "groundingMetadata": {
+    "webSearchQueries": [
+     "avocat prud'hommes Lyon"
+    ],
+    "groundingChunks": [
+     {
+      "web": {
+       "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbCdEf",
+       "title": "durand-associes.exemple.fr"
+      }
+     },
+     {
+      "web": {
+       "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/GhIjKl",
+       "title": "lemaire-avocats.exemple.fr"
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

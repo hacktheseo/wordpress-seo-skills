@@ -1,0 +1,55 @@
+{
+  "skill_name": "seo-migration-redirects",
+  "notes": "Every case is scored against a baseline run with the skill uninstalled. Fixtures are relative to this file. Case 4 needs the mock site: python3 fixtures/mock_site.py 8765, then pass --old-base http://127.0.0.1:8765 --expect-base http://localhost:8765.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We relaunch our WordPress site next month with a new URL structure and a new domain. Here is the Search Console pages export of the old site and the sitemap of the staging site. Build the redirect plan.",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/redirect_map.py build on both files. Reports 28 old URLs: 20 redirect, 3 review, 4 manual, 1 gone, and the two learned patterns /produit/* to /boutique/* and /category/* to /blog/*, each with its one exception. Shows the manual rows first by value, /tarifs/ with 95 clicks and the candidate /tarifs-reparation/, and /?p=412 as a query URL to look up in the old database. Sends nothing to the home page except the old home and /en/. Asks the user to decide the undecided rows before exporting, then runs lint.",
+      "files": ["fixtures/gsc-before-Pages.csv", "fixtures/new-sitemap.xml"],
+      "baseline": "Without the skill the model explains what a 301 is, proposes a spreadsheet with two columns to fill by hand, and often suggests redirecting everything that has no match to the home page."
+    },
+    {
+      "id": 2,
+      "prompt": "On change de nom de domaine le 15 juillet, de ancien.exemple.fr vers www.exemple.fr, avec une refonte. Voici les redirections qui existent déjà sur le site actuel. Est-ce que ça pose un problème avec le nouveau plan ?",
+      "should_trigger": true,
+      "expected_output": "Réponse en français. Lance lint avec --existing sur le plan et les règles existantes. Signale la règle /velo-cargo/ qui aboutit maintenant à une chaîne et donne la cible finale https://www.exemple.fr/blog/velotaf-hiver-equipement/, et la règle /soldes/ qui pointe vers une page absente du nouveau site, à corriger sans la supprimer. Ignore la règle regex. Rappelle l'outil de changement d'adresse de Search Console et ses conditions, et de garder les redirections au moins un an.",
+      "files": ["fixtures/existing-rules.json", "fixtures/new-sitemap.xml", "fixtures/gsc-before-Pages.csv"],
+      "baseline": "Sans la skill, le modèle ne voit pas que des règles existantes deviennent des chaînes et conseille de tout réimporter tel quel."
+    },
+    {
+      "id": 3,
+      "prompt": "Depuis la refonte du 15 juillet le trafic a baissé et on a plein de 404. Voici le journal des 404 du plugin et les exports Search Console d'avant et d'après. Il faut un rapport pour le client.",
+      "should_trigger": true,
+      "expected_output": "Rapport HTML entièrement en français. hunt met de côté les sondes de scanners (wp-login.php, .env, 1 949 passages), groupe /en/en/ comme préfixe doublé à corriger dans le lien et non par une redirection, repère /2021/03/choisir-un-velo-electrique/ prévue au plan mais encore en 404. migration_proof montre que /blog/regler-ses-freins-a-disque a gardé 15 % de ses clics quand le site en garde 76 %, et relie la perte au verdict noindex si live.json est fourni. Ne promet aucune date de retour du trafic et cite le délai indiqué par Google.",
+      "files": ["fixtures/notfound-log.json", "fixtures/gsc-before-Pages.csv", "fixtures/gsc-after-Pages-new.csv", "fixtures/gsc-after-Pages-old.csv", "fixtures/gsc-Dates.csv"],
+      "baseline": "Sans la skill, le modèle propose de rediriger toutes les 404 vers l'accueil ou une page proche, y compris les sondes de scanners, et annonce un retour à la normale en quelques semaines."
+    },
+    {
+      "id": 4,
+      "prompt": "The redirects are installed on staging. Test them before we switch the DNS.",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/check_live.py with --old-base on staging and --expect-base on the production host. Reports 21 URLs: 12 ok, 1 gone_ok, and 8 problems, among them a target still in noindex (/2021/06/regler-ses-freins-a-disque/), a canonical naming the staging host (/produit/casque-urbain/), a 302, a chain, a loop, a 404 target, a category sent to the home page, and /atelier.html not redirected. States the 350 clicks at stake. Does not stop at the status code of the first hop.",
+      "files": ["fixtures/mock_site.py", "fixtures/new-sitemap.xml"],
+      "baseline": "Without the skill the model writes a curl loop that follows redirects with -L and reports success on every URL that ends in a 200, missing the noindex, the canonical and the 302."
+    },
+    {
+      "id": 5,
+      "prompt": "Mon site WordPress est devenu lent depuis qu'on a changé d'hébergeur, les URL n'ont pas bougé. Que faire ?",
+      "should_trigger": false,
+      "expected_output": "Ne se déclenche pas. Aucune URL ne change, il n'y a pas de plan de redirection à faire : c'est une question de performance (cache, PHP, base de données).",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    },
+    {
+      "id": 6,
+      "prompt": "How do I add one 301 redirect in Rank Math from /old-offer/ to /new-offer/?",
+      "should_trigger": false,
+      "expected_output": "Does not fire. One redirect typed in a plugin screen needs the plugin's own instructions, not a migration workflow.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the model describes redirect best practice correctly in general terms, but builds no map from the data, tests nothing hop by hop, never reads the landing page for noindex or canonical, and has no before and after measured against the site's own trend."
+}

@@ -1,0 +1,102 @@
+{
+ "state": "ok",
+ "measured_at": "2026-09-08T11:00:00Z",
+ "snapshot": {
+  "contract_version": "1.2",
+  "brand": {
+   "name": "Atelier Vandel",
+   "site_url": "cabinet-vandel.exemple.fr"
+  },
+  "measured_at": "2026-09-08T11:00:00Z",
+  "visibility": {
+   "mentioned_pct": 21.4,
+   "answers_measured": 140,
+   "answers_with_mention": 30
+  },
+  "by_provider": [
+   {
+    "slug": "chatgpt",
+    "answers_measured": 50,
+    "answers_with_mention": 9
+   },
+   {
+    "slug": "perplexity",
+    "answers_measured": 50,
+    "answers_with_mention": 14
+   },
+   {
+    "slug": "gemini",
+    "answers_measured": 40,
+    "answers_with_mention": 7
+   }
+  ],
+  "questions": [
+   {
+    "question": "Quel avocat en droit du travail choisir à Lyon ?",
+    "theme": "Choisir un avocat",
+    "provider": "chatgpt",
+    "cited": false,
+    "cited_urls": [],
+    "competitors_cited": [
+     "Lemaire Avocats",
+     "Maître Durand"
+    ],
+    "times_asked": 14
+   },
+   {
+    "question": "Quel avocat en droit du travail choisir à Lyon ?",
+    "theme": "Choisir un avocat",
+    "provider": "perplexity",
+    "cited": true,
+    "cited_urls": [
+     "https://cabinet-vandel.exemple.fr/"
+    ],
+    "competitors_cited": [
+     "Lemaire Avocats"
+    ],
+    "times_asked": 14
+   },
+   {
+    "question": "Comment calculer une indemnité de rupture conventionnelle ?",
+    "theme": "Rupture",
+    "provider": "chatgpt",
+    "cited": true,
+    "cited_urls": [
+     "https://cabinet-vandel.exemple.fr/rupture-conventionnelle/"
+    ],
+    "competitors_cited": [
+     "JuriFacile"
+    ],
+    "times_asked": 9
+   },
+   {
+    "question": "Combien coûte un avocat en droit du travail ?",
+    "theme": "Honoraires",
+    "provider": "gemini",
+    "cited": false,
+    "cited_urls": [
+     "https://jurifacile.exemple.fr/tarifs",
+     "https://capital.exemple.fr/avocat-prix"
+    ],
+    "competitors_cited": [
+     "JuriFacile"
+    ],
+    "times_asked": 11
+   }
+  ],
+  "sources": {
+   "citation_share": {
+    "percentage": 4.2,
+    "rank": 12,
+    "total_citations": 1234
+   },
+   "top_domains": [
+    {
+     "domain": "pagesjaunes.fr",
+     "count": 210,
+     "percentage": 17.0
+    }
+   ]
+  }
+ }
+}

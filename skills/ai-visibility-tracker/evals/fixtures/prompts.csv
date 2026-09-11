@@ -1,0 +1,13 @@
+prompt_id,prompt,family
+dec-01,Quel avocat en droit du travail choisir à Lyon ?,category-discovery
+dec-02,Meilleur cabinet pour contester un licenciement à Lyon,category-discovery
+dec-03,Avocat prud'hommes Lyon avis,category-discovery
+cmp-01,Lemaire Avocats ou Atelier Vandel pour un licenciement ?,named-comparison
+cmp-02,JuriFacile ou un avocat pour une rupture conventionnelle ?,named-comparison
+imp-01,Comment calculer une indemnité de rupture conventionnelle ?,implementation
+imp-02,Comment saisir les prud'hommes étape par étape ?,implementation
+imp-03,Quels délais pour contester un licenciement économique ?,implementation
+obj-01,Combien coûte un avocat en droit du travail ?,objection
+obj-02,Un avocat vaut-il le coup pour une rupture conventionnelle ?,objection
+obj-03,Peut-on se défendre seul aux prud'hommes ?,objection
+qua-01,Atelier Vandel fait-il des consultations en visio ?,qualification

@@ -1,0 +1,55 @@
+{
+  "skill_name": "ai-visibility-tracker",
+  "notes": "Every case is scored against a baseline run with the skill uninstalled. Fixtures are relative to this file: a fictional Lyon law firm measured on 12 prompts, 3 engines and 5 runs in June and September 2026, four answers saved from each API's documented shape, and an AVA snapshot as the paid plugin returns it.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here is our September survey of AI answers and the June one. Did our visibility in ChatGPT and Perplexity actually improve?",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/visibility.py with --baseline. Reports 30 % in September with its interval (24 to 37 %), and a change of +3 points overall, interval -6 to +13: noise. Per engine, every change is noise. Only the implementation family moved for real, 27 % to 58 %, interval +11 to +48 points: signal. Does not call the other moves progress, shows no average rank.",
+      "files": ["fixtures/survey-june.csv", "fixtures/survey-september.csv", "fixtures/brand.json"],
+      "baseline": "Without the skill the model subtracts the two rates, calls +3 points an improvement, and reads per engine moves of 5 to 7 points as trends."
+    },
+    {
+      "id": 2,
+      "prompt": "Quels sites les IA citent-elles à notre place quand on n'apparaît pas ? Voici le relevé du mois.",
+      "should_trigger": true,
+      "expected_output": "Réponse et rapport en français. Construit le tableau des sources qui répondent à la place de la marque : sept domaines stables, dont deux médias (capital, justifit), les deux concurrents, reddit.com, quora.com et pagesjaunes.fr, avec une action par type (proposer une correction à l'auteur, répondre sous le compte déclaré de la marque, être référencé, publier une page de comparaison). Écarte les domaines apparus une seule fois. Jamais de faux avis ni de faux comptes.",
+      "files": ["fixtures/survey-september.csv", "fixtures/brand.json"],
+      "baseline": "Sans la skill, le modèle liste les domaines les plus cités au total, marque comprise, sans séparer les réponses où la marque est absente ni les sources stables des sources de passage."
+    },
+    {
+      "id": 3,
+      "prompt": "Run this prompt set on ChatGPT, Perplexity, Gemini and Claude, five times each, and tell me how visible we are.",
+      "should_trigger": true,
+      "expected_output": "Writes engines.json from --print-config, runs run_survey.py without --yes first and shows 240 calls and the search fees before sending anything, asks for approval, reads the keys from the environment only, and warns that API answers are a proxy that overlaps little with what the apps show.",
+      "files": ["fixtures/prompts.csv", "fixtures/brand.json"],
+      "baseline": "Without the skill the model writes a script that sends the calls immediately, with the key pasted into the code, and runs each prompt once."
+    },
+    {
+      "id": 4,
+      "prompt": "Le site client tourne avec l'extension payante et AVA. Fais-moi le point visibilité IA à partir de ce qu'AVA a mesuré.",
+      "should_trigger": true,
+      "expected_output": "Appelle hts_get_ai_visibility avec section all, ou lit le fichier fourni, puis visibility.py --from-ava. Prend les taux dans les décomptes d'AVA (21,4 %, 30 réponses sur 140) avec leur intervalle, les sources dans les questions, et précise que les chiffres viennent des mesures agrégées d'AVA. Si l'outil répond no_key, le dit en une phrase et propose un relevé par les API.",
+      "files": ["fixtures/ava-snapshot.json", "fixtures/brand.json"],
+      "baseline": "Sans la skill, le modèle recopie les pourcentages d'AVA sans intervalle et sans dire d'où ils viennent."
+    },
+    {
+      "id": 5,
+      "prompt": "Je veux une stratégie pour être cité par ChatGPT, on part de zéro.",
+      "should_trigger": false,
+      "expected_output": "Ne se déclenche pas, ou passe la main : partir de zéro demande la carte des prompts et le plan à 90 jours de geo-strategy-map, la mesure vient ensuite.",
+      "files": [],
+      "baseline": "Not applicable, this case measures the boundary with the neighbouring skill."
+    },
+    {
+      "id": 6,
+      "prompt": "How much referral traffic did chatgpt.com send us last month in GA4?",
+      "should_trigger": false,
+      "expected_output": "Does not fire. Referral traffic is a GA4 report, not a measure of answers.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the model counts mentions once, gives rates without intervals, treats a few points of change as a trend, and lists the most cited domains without isolating the answers where the brand is missing."
+}

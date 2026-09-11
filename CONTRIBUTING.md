@@ -2,7 +2,7 @@
 
 ## Where we are
 
-Outside contributions are **not open yet**. We are running these four skills against
+Outside contributions are **not open yet**. We are running these skills against
 real client sites first, so that a contribution has something solid to be measured
 against rather than a moving target.
 
@@ -14,7 +14,7 @@ What is open right now:
   sample of the input.
 - **Discussions.** Tell us which skill is missing. We keep a list.
 
-Pull requests will open once the first four skills have been through a full quarter.
+Pull requests will open once the skills have been through a full quarter.
 If you have one ready before then, open an issue describing it and we will tell you
 whether to hold it or send it.
 

@@ -1,0 +1,55 @@
+{
+  "skill_name": "wp-seo-plugin-driver",
+  "notes": "Every case is scored against a baseline run with the skill uninstalled. Fixtures are relative to this file: before/ and after/ hold the saved heads of the same six pages under Yoast then Rank Math, wp-json-rankmath.json the REST index of the site after the switch.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Which SEO plugin runs on this client site, and can I change meta descriptions through the API without logging into the admin?",
+      "should_trigger": true,
+      "expected_output": "Runs scripts/seo_driver.py detect. Finds Rank Math, the rankmath/v1/updateMeta route, the Abilities API and an MCP endpoint, and no conflict. Explains the write path is POST /wp-json/rankmath/v1/updateMeta with an application password on an Editor account, read from the environment, and that the rank_math_* keys are not writable through the core posts route.",
+      "files": ["fixtures/after/accueil.html", "fixtures/wp-json-rankmath.json"],
+      "baseline": "Without the skill the model says to use the core REST API with a meta field, which silently ignores unregistered rank_math_* keys and answers 200."
+    },
+    {
+      "id": 2,
+      "prompt": "On vient de passer ce site client de Yoast à Rank Math. Voici les pages avant et après. Est-ce qu'on a perdu quelque chose ?",
+      "should_trigger": true,
+      "expected_output": "Réponse et rapport en français. Lance snapshot sur les deux dossiers puis diff. Trouve : /contact/ passée en noindex, /honoraires/ avec une canonique sur l'hôte de préproduction, la description de /rupture-conventionnelle/ perdue, le schéma Article de /prudhommes-procedure/ devenu WebPage, et le séparateur du titre changé. Verdict : 3 pages sur 6 ont perdu un élément qui coûte du trafic. Conseille de garder Yoast installé tant que le diff n'est pas propre.",
+      "files": ["fixtures/before", "fixtures/after"],
+      "baseline": "Sans la skill, le modèle rassure sur la qualité des importeurs ou propose une liste de contrôle générique, sans comparer les pages."
+    },
+    {
+      "id": 3,
+      "prompt": "Corrige ces 5 problèmes sur le site Rank Math, voici le fichier de changements.",
+      "should_trigger": true,
+      "expected_output": "Lance plan avec le detect et le snapshot : 5 appels updateMeta avec les identifiants 63, 57, 12, 9 et 41 lus dans les pages, identifiants de connexion lus dans l'environnement. N'envoie rien, montre apply.sh, demande un accord explicite, propose --first puis verify sur la page, et signale que le format du tableau robots de Rank Math n'est pas documenté.",
+      "files": ["fixtures/changes.csv", "fixtures/after", "fixtures/wp-json-rankmath.json"],
+      "baseline": "Sans la skill, le modèle écrit des appels curl vers /wp/v2/posts avec un champ meta, ou demande le mot de passe administrateur dans la conversation."
+    },
+    {
+      "id": 4,
+      "prompt": "Convert our Yoast title template %%title%% %%sep%% %%sitename%% to Rank Math before we switch.",
+      "should_trigger": true,
+      "expected_output": "Runs vars and returns %title% %sep% %sitename%, then warns that variables without an equivalent must be rewritten by hand and that the switch needs a snapshot and diff.",
+      "files": [],
+      "baseline": "Without the skill the model usually gets the three common variables right from memory, and has no answer for the rarer ones or for AIOSEO's # syntax."
+    },
+    {
+      "id": 5,
+      "prompt": "Yoast ou Rank Math, lequel est le meilleur pour un petit site vitrine ?",
+      "should_trigger": false,
+      "expected_output": "Ne se déclenche pas. C'est une question de choix, pas une opération sur un site.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    },
+    {
+      "id": 6,
+      "prompt": "Write a meta description for this article about bike maintenance.",
+      "should_trigger": false,
+      "expected_output": "Does not fire. One description to write needs no plugin driver.",
+      "files": [],
+      "baseline": "Not applicable, this case measures a false positive."
+    }
+  ],
+  "baseline": "Each case is run twice, once with the skill installed and once without. Without the skill the model knows the plugins in general but not which write path each one really honours, sends meta keys the core API drops while answering 200, and checks nothing on the rendered page."
+}

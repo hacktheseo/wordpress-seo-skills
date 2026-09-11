@@ -1,8 +1,8 @@
 {
   "name": "wordpress-seo-skills",
   "displayName": "WordPress SEO and GEO skills",
-  "description": "SEO and GEO agent skills for WordPress sites. Server log forensics for AI crawlers, passage level citability scoring, a 90 day GEO plan, and portfolio reporting for agencies. Every analysis ends in a self-contained HTML report.",
-  "version": "1.0.0",
+  "description": "SEO and GEO agent skills for WordPress sites. Server log forensics for AI crawlers, passage level citability scoring, a 90 day GEO plan, AI answer visibility with its source gap, AI crawler governance, site migrations and redirects, a driver for the four major SEO plugins, and portfolio reporting for agencies. Every analysis ends in a self-contained HTML report.",
+  "version": "1.1.0",
   "license": "GPL-2.0-or-later",
   "author": {
     "name": "Hack The SEO",
@@ -27,6 +27,12 @@
     "referencement",
     "claude-skills",
     "agent-skills",
-    "claude-code"
+    "claude-code",
+    "llms-txt",
+    "redirects",
+    "site-migration",
+    "yoast",
+    "rank-math",
+    "ai-visibility"
   ]
 }

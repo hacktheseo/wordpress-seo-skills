@@ -1,0 +1,35 @@
+{
+ "id": "c6e9",
+ "output": [
+  {
+   "type": "search_results",
+   "results": [
+    {
+     "id": 1,
+     "url": "https://service-public.exemple.fr/rupture",
+     "title": "Rupture conventionnelle",
+     "date": "2026-04-02"
+    },
+    {
+     "id": 2,
+     "url": "https://jurifacile.exemple.fr/rupture",
+     "title": "JuriFacile"
+    }
+   ]
+  },
+  {
+   "type": "message",
+   "role": "assistant",
+   "content": [
+    {
+     "type": "output_text",
+     "text": "L'indemnité ne peut être inférieure à l'indemnité légale [1]. Des services comme JuriFacile proposent un calcul en ligne [2]."
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 1200,
+  "output_tokens": 300
+ }
+}

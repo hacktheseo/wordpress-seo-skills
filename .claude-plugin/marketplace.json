@@ -10,8 +10,8 @@
       "name": "wordpress-seo-skills",
       "source": "./",
       "displayName": "WordPress SEO and GEO skills",
-      "description": "Audit AI crawler logs, score pages for AI citability, build a 90 day GEO plan, and produce monthly client reports across a portfolio of WordPress sites.",
-      "version": "1.0.0",
+      "description": "Audit AI crawler logs, score pages for AI citability, build a 90 day GEO plan, track brand visibility in AI answers, govern robots.txt and llms.txt for AI crawlers, plan and prove site migrations, drive Yoast, Rank Math, AIOSEO or SEOPress, and produce monthly client reports across a portfolio of WordPress sites.",
+      "version": "1.1.0",
       "license": "GPL-2.0-or-later",
       "category": "productivity",
       "homepage": "https://hacktheseo.com",
@@ -33,7 +33,13 @@
         "referencement",
         "claude-skills",
         "agent-skills",
-        "claude-code"
+        "claude-code",
+        "llms-txt",
+        "redirects",
+        "site-migration",
+        "yoast",
+        "rank-math",
+        "ai-visibility"
       ]
     }
   ]
