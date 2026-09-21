@@ -41,8 +41,9 @@ open out/portfolio.html
 ## Why this exists
 
 `WordPress/agent-skills`, the official repository from the WordPress project, ships
-sixteen skills covering block development, themes, the REST API, WP-CLI, performance
-and the Abilities API. It covers no SEO at all. This repository is the layer on top
+nineteen skills covering block development, themes, the REST API, WP-CLI, performance
+and the Abilities API. It covers no SEO at all. (Counted on 21 September 2026 — they
+add skills, so check the number before you quote it.) This repository is the layer on top
 of it, not a competitor to it. If you build WordPress, install theirs. If you also
 have to answer for a site's visibility, install this one too.
 
