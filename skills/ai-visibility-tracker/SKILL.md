@@ -200,6 +200,7 @@ says the figures come from AVA's aggregated runs.
 | [references/apis.md](references/apis.md) | Running the survey through APIs |
 | [references/sources.md](references/sources.md) | Explaining which domains engines cite, and what to do about each |
 | [references/first-party.md](references/first-party.md) | Search Console, Bing, GA4 and referral data |
+| [references/gsc-mcp.md](references/gsc-mcp.md) | A Search Console MCP is connected, read it live instead of asking for an export |
 | [references/ava.md](references/ava.md) | The site runs the paid plugin with AVA |
 | [references/fr/livrables.md](references/fr/livrables.md) | The user writes in French |
 | [references/free-plugin-mcp.md](references/free-plugin-mcp.md) | The site runs the free plugin |

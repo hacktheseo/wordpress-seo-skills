@@ -74,7 +74,11 @@ returns one answer, in which the brand is present or absent. There is no page 2.
 
 Build the map from material the user already owns, in this order of value:
 
-1. **Search Console export.** Keep the long queries and the interrogative ones,
+1. **Search Console.** Read it live when a Search Console MCP is connected
+   (`get_search_analytics`, then `get_advanced_search_analytics` to filter by
+   country), otherwise ask for an export:
+   [references/gsc-mcp.md](references/gsc-mcp.md).
+   Keep the long queries and the interrogative ones,
    then rewrite each into a full sentence with the constraint the user's buyers
    actually have. One query gives one to three prompts.
 2. **Support and pre-sales questions.** The real material, and nobody exploits

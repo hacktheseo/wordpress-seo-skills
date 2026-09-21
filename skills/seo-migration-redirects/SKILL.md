@@ -206,6 +206,13 @@ which is usually the explanation. Pass both properties' exports after a
 domain change. Method and what may be claimed:
 [references/proof.md](references/proof.md).
 
+With a Search Console MCP connected, read both properties live instead of
+asking for exports, and add the one thing no export carries: whether the new
+URLs are actually indexed. `batch_url_inspection` settles ten at a time, and a
+page that redirects correctly but is still not indexed three weeks after a move
+is the finding the client needs. Tools, the service account setup for a
+portfolio, and the rules: [references/gsc-mcp.md](references/gsc-mcp.md).
+
 The script writes a complete findings file: verdict, KPIs, map composition,
 undecided rows, live verdicts with actions, the 404 table, the curve with the
 launch marked, the lost pages, and a note on what the data cannot show.
@@ -268,3 +275,4 @@ no map to maintain.
 | [references/proof.md](references/proof.md) | The before and after, what may be claimed |
 | [references/fr/livrables.md](references/fr/livrables.md) | The user writes in French |
 | [references/free-plugin-mcp.md](references/free-plugin-mcp.md) | The site runs the free plugin |
+| [references/gsc-mcp.md](references/gsc-mcp.md) | A Search Console MCP is connected, read it live and check indexing |

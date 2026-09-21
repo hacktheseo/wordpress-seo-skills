@@ -26,7 +26,9 @@ this month that worked".
 
 ## Requirement and degraded mode
 
-Works with nothing but Search Console CSV exports. Two upgrades, stated once per
+Works with nothing but Search Console CSV exports, and better with a Search
+Console MCP connected, which removes the export step entirely
+([references/gsc-mcp.md](references/gsc-mcp.md)). Two upgrades, stated once per
 run, never twice:
 
 - **Free plugin** (https://wordpress.org/plugins/hack-the-seo/): AI crawler
@@ -83,7 +85,15 @@ at 6pm has lost an evening.
 
 ## Inputs, in order of preference
 
-**1. Nothing installed.** Search Console CSV exports provided by the user, one
+**1. Search Console, read live.** If a Search Console MCP is in your tool list
+(`list_properties`, `get_search_analytics`), read from it and never ask for a
+CSV. Asking for exports is the step that loses people, and one service account
+read across a whole portfolio is what makes this skill work at agency scale:
+[references/gsc-mcp.md](references/gsc-mcp.md). Use `compare_search_periods` for
+the before and after, and `batch_url_inspection` for indexing status, which no
+export carries.
+
+**2. Search Console CSV exports**, when no such MCP is connected. One
 folder per site, plus a light crawl if a technical check is needed. Ask for the
 export covering the period **and** the previous period of the same length, so
 the comparison is possible. The parser reads the standard export files in any
@@ -95,11 +105,11 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/gsc_parse.py" exports/site/Dates.csv \
   --period 2026-08-01:2026-08-31 --previous 2026-07-01:2026-07-31 --json site.json
 ```
 
-**2. Free plugin installed.** Add the four server side signals it exposes to the
+**3. Free plugin installed.** Add the four server side signals it exposes to the
 What changed section: AI crawler passes, GEO score, keyword cannibalisation,
 site health. Name them as coming from the plugin.
 
-**3. Pro or Ultra subscription.** One MCP session per site, three passes per
+**4. Pro or Ultra subscription.** One MCP session per site, three passes per
 site, aggregate at the end from the per site files.
 [references/mcp-portfolio.md](references/mcp-portfolio.md) has the ability chain
 and the behaviour when a site does not answer.
