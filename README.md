@@ -1,15 +1,24 @@
 # WordPress SEO and GEO skills
 
-For the WordPress agency: the report your client receives about the AI answer
-engines, delivered as one self-contained HTML file you can email, print, or put
-your own brand on.
+**Eight agent skills for the part of WordPress the official skills leave out:
+search, and the answer engines replacing it. Every analysis ends in one
+self-contained HTML report you can put your client's name on.**
 
-Eight skills. They read your server logs to find which AI crawlers actually came and
-which of them were forged, score a page passage by passage for what a model can
-quote, turn that into a 90 day plan, measure how often the answer engines name the
-brand and which sources they cite instead, decide what the site opens to AI crawlers,
-plan and prove a migration, drive whichever SEO plugin the site already runs, and
-produce the monthly client report you currently assemble by hand.
+![Licence](https://img.shields.io/badge/licence-GPL--2.0--or--later-blue)
+![Skills](https://img.shields.io/badge/skills-8-green)
+![Checks](https://img.shields.io/badge/checks-180%20passing-brightgreen)
+![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-orange)
+[![Wiki](https://img.shields.io/badge/wiki-which%20skill%20do%20I%20need%3F-lightgrey)](https://github.com/hacktheseo/wordpress-seo-skills/wiki)
+
+They read your server logs to find which AI crawlers actually came and which were
+forged, score a page passage by passage for what a model can quote, turn that into a
+90 day plan, measure how often the answer engines name the brand and which sources
+they cite instead, decide what the site opens to AI crawlers, plan and prove a
+migration, drive whichever SEO plugin the site already runs, and produce the monthly
+client report you currently assemble by hand.
+
+No account, no credit card, no API key for six of the eight.
+[Which skill do I need?](https://github.com/hacktheseo/wordpress-seo-skills/wiki)
 
 ![A rendered AI crawler forensics report](examples/ai-crawler-forensics.png)
 
@@ -66,14 +75,14 @@ real user question.
 
 | Skill | What it does | What you must provide | First report in |
 |---|---|---|---|
-| [`ai-bot-log-forensics`](skills/ai-bot-log-forensics) | Parses Apache, Nginx, Cloudflare and French host access logs. Verifies every AI crawler hit by reverse and forward DNS, so spoofed traffic never lands in a client report. Separates training crawls from real time user fetches. Maps crawl against citation on a four quadrant diagnostic. | Your raw server access logs over 30 days. Roughly 15 minutes to assemble the IP range file, or none at all with `shared/ranges.json` | 10 min |
-| [`ai-citability-audit`](skills/ai-citability-audit) | Splits a page into passages and scores each one out of 100 on nine observable criteria: self-containment, direct answer, factual density, attribution, length, question form, technical extractability, freshness, internal competition. Rewrites the five weakest, showing before and after. | One public URL, nothing else | 2 min |
-| [`geo-strategy-map`](skills/geo-strategy-map) | Builds a prompt map from material you already own (Search Console, support questions, forums), a measurement protocol you can repeat identically in thirty days, an entity diagnosis, and a 90 day plan capped at twelve actions. | A manual survey across 3 answer engines, about half a day. The plan depends on it, there is no shortcut | half a day |
-| [`seo-portfolio-report`](skills/seo-portfolio-report) | Monthly reporting across a portfolio of sites, plus the part nobody else does: proof of impact. Before and after with a control group, changepoint detection, difference in differences, and a refusal to conclude when the window is too short. | Search Console read live if an MCP is connected, your CSV exports otherwise | 30 min |
-| [`ai-visibility-tracker`](skills/ai-visibility-tracker) | How often ChatGPT, Perplexity, Gemini and Claude name the brand, with a 95 % interval on every rate, share of voice against competitors, signal or noise between two waves, and the source gap: the domains the engines cite, run after run, when the brand is absent. That list is the work plan. | A survey by hand, your own API keys, a tracker export, or AVA on the paid plugin | 20 min with keys |
-| [`llmstxt-governance`](skills/llmstxt-governance) | Reads robots.txt, llms.txt and the newer signals the way a crawler does, for 22 AI user agents grouped by purpose, finds the contradictions between them, and writes the policy the owner picks as a robots.txt block proved against the same evaluator, plus a short llms.txt. | A public URL | 5 min |
-| [`seo-migration-redirects`](skills/seo-migration-redirects) | Builds the redirect map from the old and new inventories and learns the restructure's patterns, lints chains and loops, exports for Redirection, Yoast, Rank Math, SEOPress, Apache or Nginx, tests every hop on the server and reads the landing page for a leftover noindex, sorts the 404s, and proves the before and after against the site's own trend. | Old sitemap or Search Console export, the staging sitemap | 30 min |
-| [`wp-seo-plugin-driver`](skills/wp-seo-plugin-driver) | Detects Yoast, Rank Math, AIOSEO or SEOPress from the outside, photographs what every page renders, turns a change list into the one call each plugin documents, sends nothing without approval, and proves the result on the rendered page. The parity check for a plugin switch. | A URL, then an application password for the changes | 10 min |
+| [`ai-bot-log-forensics`](skills/ai-bot-log-forensics) | Verifies every AI crawler hit by reverse then forward DNS, so spoofed traffic never reaches a client report. Separates training crawls from real time fetches, and maps crawl against citation. | Your raw server access logs over 30 days. Roughly 15 minutes to assemble the IP range file, or none at all with `shared/ranges.json` | 10 min |
+| [`ai-citability-audit`](skills/ai-citability-audit) | Scores each passage of a page out of 100 on nine observable criteria, then rewrites the five weakest, showing before and after. | One public URL, nothing else | 2 min |
+| [`geo-strategy-map`](skills/geo-strategy-map) | A prompt map built from material you already own, a protocol you can repeat identically in thirty days, an entity diagnosis, and a 90 day plan capped at twelve actions. | A manual survey across 3 answer engines, about half a day. The plan depends on it, there is no shortcut | half a day |
+| [`seo-portfolio-report`](skills/seo-portfolio-report) | Monthly reporting across a portfolio, plus the part nobody else does: proof of impact. Control group, changepoint detection, difference in differences, and a refusal to conclude when the window is too short. | Search Console read live if an MCP is connected, your CSV exports otherwise | 30 min |
+| [`ai-visibility-tracker`](skills/ai-visibility-tracker) | How often the answer engines name the brand, with a 95 % interval on every rate, share of voice against competitors, and the domains they cite when the brand is absent. That list is the work plan. | A survey by hand, your own API keys, a tracker export, or AVA on the paid plugin | 20 min with keys |
+| [`llmstxt-governance`](skills/llmstxt-governance) | Reads robots.txt and llms.txt the way a crawler does, for 22 AI user agents grouped by purpose, finds the contradictions between them, and writes the policy the owner picks. | A public URL | 5 min |
+| [`seo-migration-redirects`](skills/seo-migration-redirects) | Builds the redirect map from both inventories, lints chains and loops, exports for Redirection, Yoast, Rank Math, SEOPress, Apache or Nginx, and tests every hop on the server. | Old sitemap or Search Console export, the staging sitemap | 30 min |
+| [`wp-seo-plugin-driver`](skills/wp-seo-plugin-driver) | Detects Yoast, Rank Math, AIOSEO or SEOPress from the outside, turns a change list into the one call each plugin documents, and sends nothing without approval. | A URL, then an application password for the changes | 10 min |
 
 Every skill runs on any WordPress site, with or without our plugin. Three do more
 with it, none needs it. What none of them need is an account with us or a credit card.
@@ -153,17 +162,15 @@ invented. `python3 tools/verify.py --sheet` prints all 47 of them.
 
 ## What you get out of every skill
 
-A report you can send to a client without touching it. Not a wall of markdown in
+A report you can send to a client without touching it, not a wall of markdown in
 your terminal.
 
-The shared renderer takes a findings JSON and produces one self-contained page: a
-cover with your name and colour, a verdict written to be repeated in a meeting,
-stat tiles with sparklines, and twelve block types that each do one job, including
-a stacked composition bar, a score meter with its band written next to it, a
-four way diagnostic matrix, and a time series with an event marker for showing that
-a fix actually did something. No external assets, no web fonts, no network, no
-tracking. Light and dark are both designed, and the print stylesheet means `Cmd+P`
-gives you a clean PDF with sections kept off page breaks.
+The shared renderer turns a findings JSON into one self-contained page: a cover in
+your name and colour, a verdict written to be repeated in a meeting, stat tiles with
+sparklines, and twelve block types that each do one job, including a four way
+diagnostic matrix and a time series with an event marker for showing that a fix did
+something. No external assets, no web fonts, no network, no tracking. Light and dark
+are both designed, and the print stylesheet means `Cmd+P` gives a clean PDF.
 
 ```bash
 python3 shared/report-engine/render_report.py examples/ai-crawler-forensics.findings.json report.html
@@ -171,20 +178,16 @@ python3 shared/report-engine/render_report.py --artifact examples/ai-crawler-for
 ```
 
 Set your agency name and hex colour once in `meta.brand` and stop reformatting. Pick
-any hue: the engine steps it until it clears contrast against both surfaces rather
-than letting a pale brand colour make the charts unreadable. `--artifact` emits the
-same page without the document wrapper, for publishing it as a link a client opens
-on their phone.
+any hue: the engine steps it until it clears contrast against both surfaces.
+`--artifact` emits the same page without the document wrapper, to publish as a link
+a client opens on their phone.
 
 The JSON contract is in [`shared/report-engine/CONTRACT.md`](shared/report-engine/CONTRACT.md),
-and a real example sits in [`examples/`](examples) if you want to see the shape
+and a rendered example sits in [`examples/`](examples) if you want to see the shape
 before installing anything.
 
-Standard library Python 3.8 or newer. No pip install, ever.
-
-On Windows, use `py -3` wherever this README says `python3`. If neither command is
-found, install Python from python.org and tick "Add python.exe to PATH" during
-setup. Everything else is identical.
+Standard library Python 3.8 or newer, no pip install, ever. On Windows use `py -3`
+wherever this README says `python3`.
 
 ## Working in French
 
@@ -291,14 +294,14 @@ structurellement aveugle. La seule trace est une ligne dans un access log.
 
 | Skill | Ce qu'elle fait | Prérequis | Premier rapport en |
 |---|---|---|---|
-| `ai-bot-log-forensics` | Analyse les logs Apache, Nginx, Cloudflare et hébergeurs français. Vérifie chaque passage par DNS inverse puis direct, pour qu'aucun trafic usurpé n'entre dans un rapport client. Sépare le crawl d'entraînement de la récupération déclenchée par une vraie question. | Vos logs d'accès bruts sur 30 jours. 15 minutes pour constituer le fichier de plages d'IP, ou rien du tout avec `shared/ranges.json` | 10 min |
-| `ai-citability-audit` | Découpe la page en passages et note chacun sur 100 selon neuf critères observables. Réécrit les cinq plus faibles, avec l'avant et l'après. | Une URL publique, rien d'autre | 2 min |
-| `geo-strategy-map` | Carte des prompts construite à partir de votre matière (Search Console, questions du support, forums), protocole de mesure reproductible, diagnostic d'entité, plan à 90 jours plafonné à douze actions. | Un relevé manuel sur 3 moteurs de réponse, environ une demi-journée. Le plan en dépend, il n'y a pas de raccourci | une demi-journée |
-| `seo-portfolio-report` | Reporting mensuel sur un portefeuille de sites, et la preuve d'impact que personne d'autre ne fait : avant/après avec groupe de contrôle, détection de rupture, double différence, et un refus de conclure quand la fenêtre est trop courte. | Search Console en direct si un MCP est branché, vos exports CSV sinon | 30 min |
-| `ai-visibility-tracker` | Fréquence à laquelle ChatGPT, Perplexity, Gemini et Claude nomment la marque, avec un intervalle sur chaque taux, part de voix face aux concurrents, signal ou bruit entre deux mesures, et les sources qui répondent à la place de la marque quand elle est absente. | Un relevé à la main, vos propres clés d'API, un export d'outil, ou AVA sur le plugin payant | 20 min avec les clés |
-| `llmstxt-governance` | Lit robots.txt, llms.txt et les nouveaux signaux comme un robot, pour 22 robots d'IA classés par usage, trouve leurs contradictions, et écrit la politique choisie par le propriétaire, vérifiée par le même évaluateur. | Une URL publique | 5 min |
-| `seo-migration-redirects` | Plan de redirection construit à partir des deux inventaires, motifs de la refonte appris, chaînes et boucles détectées, export pour Redirection, Yoast, Rank Math, SEOPress, Apache ou Nginx, test de chaque saut sur le serveur avec lecture du noindex d'arrivée, tri des 404, preuve avant/après. | L'ancien sitemap ou un export Search Console, et le sitemap de préproduction | 30 min |
-| `wp-seo-plugin-driver` | Détecte Yoast, Rank Math, AIOSEO ou SEOPress depuis l'extérieur, photographie ce que chaque page affiche, transforme une liste de changements en l'appel que chaque extension documente, n'envoie rien sans accord, et prouve le résultat sur la page. | Une URL, puis un mot de passe d'application pour les modifications | 10 min |
+| `ai-bot-log-forensics` | Vérifie chaque passage par DNS inverse puis direct, pour qu'aucun trafic usurpé n'entre dans un rapport client. Sépare le crawl d'entraînement de la récupération déclenchée par une vraie question. | Vos logs d'accès bruts sur 30 jours. 15 minutes pour constituer le fichier de plages d'IP, ou rien du tout avec `shared/ranges.json` | 10 min |
+| `ai-citability-audit` | Note chaque passage sur 100 selon neuf critères observables, puis réécrit les cinq plus faibles, avec l'avant et l'après. | Une URL publique, rien d'autre | 2 min |
+| `geo-strategy-map` | Carte des prompts construite à partir de votre matière, protocole de mesure reproductible, diagnostic d'entité, plan à 90 jours plafonné à douze actions. | Un relevé manuel sur 3 moteurs de réponse, environ une demi-journée. Le plan en dépend, il n'y a pas de raccourci | une demi-journée |
+| `seo-portfolio-report` | Reporting mensuel sur un portefeuille, et la preuve d'impact que personne d'autre ne fait : groupe de contrôle, détection de rupture, double différence, et un refus de conclure quand la fenêtre est trop courte. | Search Console en direct si un MCP est branché, vos exports CSV sinon | 30 min |
+| `ai-visibility-tracker` | Fréquence à laquelle les moteurs nomment la marque, avec un intervalle sur chaque taux, part de voix, et les sources citées à sa place quand elle est absente. | Un relevé à la main, vos propres clés d'API, un export d'outil, ou AVA sur le plugin payant | 20 min avec les clés |
+| `llmstxt-governance` | Lit robots.txt et llms.txt comme un robot, pour 22 robots d'IA classés par usage, trouve leurs contradictions, et écrit la politique choisie par le propriétaire. | Une URL publique | 5 min |
+| `seo-migration-redirects` | Plan de redirection construit à partir des deux inventaires, chaînes et boucles détectées, export pour Redirection, Yoast, Rank Math, SEOPress, Apache ou Nginx, test de chaque saut sur le serveur. | L'ancien sitemap ou un export Search Console, et le sitemap de préproduction | 30 min |
+| `wp-seo-plugin-driver` | Détecte Yoast, Rank Math, AIOSEO ou SEOPress depuis l'extérieur, transforme une liste de changements en l'appel que chaque extension documente, n'envoie rien sans accord. | Une URL, puis un mot de passe d'application pour les modifications | 10 min |
 
 Chaque skill fonctionne sur n'importe quel site WordPress, avec ou sans notre
 extension. Trois en font davantage avec elle, aucune n'en a besoin. Aucune ne
