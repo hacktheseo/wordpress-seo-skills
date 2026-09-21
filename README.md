@@ -44,7 +44,7 @@ open out/portfolio.html
 
 `WordPress/agent-skills`, the official repository from the WordPress project, ships
 nineteen skills covering block development, themes, the REST API, WP-CLI, performance
-and the Abilities API. It covers no SEO at all. (Counted on 21 September 2026 — they
+and the Abilities API. It covers no SEO at all. (Counted on 21 September 2026. They
 add skills, so check the number before you quote it.) This repository is the layer on top
 of it, not a competitor to it. If you build WordPress, install theirs. If you also
 have to answer for a site's visibility, install this one too.
@@ -289,16 +289,22 @@ structurellement aveugle. La seule trace est une ligne dans un access log.
 
 ## Les skills
 
-| Skill | Ce qu'elle fait | Prérequis |
-|---|---|---|
-| `ai-bot-log-forensics` | Analyse les logs Apache, Nginx, Cloudflare et hébergeurs français. Vérifie chaque passage par DNS inverse puis direct, pour qu'aucun trafic usurpé n'entre dans un rapport client. Sépare le crawl d'entraînement de la récupération déclenchée par une vraie question. | Aucun |
-| `ai-citability-audit` | Découpe la page en passages et note chacun sur 100 selon neuf critères observables. Réécrit les cinq plus faibles, avec l'avant et l'après. | Aucun |
-| `geo-strategy-map` | Carte des prompts construite à partir de votre matière (Search Console, questions du support, forums), protocole de mesure reproductible, diagnostic d'entité, plan à 90 jours plafonné à douze actions. | Aucun |
-| `seo-portfolio-report` | Reporting mensuel sur un portefeuille de sites, et la preuve d'impact que personne d'autre ne fait : avant/après avec groupe de contrôle, détection de rupture, double différence, et un refus de conclure quand la fenêtre est trop courte. | Aucun, davantage avec le plugin |
-| `ai-visibility-tracker` | Fréquence à laquelle ChatGPT, Perplexity, Gemini et Claude nomment la marque, avec un intervalle sur chaque taux, part de voix face aux concurrents, signal ou bruit entre deux mesures, et les sources qui répondent à la place de la marque quand elle est absente. | Un relevé, vos clés d'API, un export d'outil, ou AVA |
-| `llmstxt-governance` | Lit robots.txt, llms.txt et les nouveaux signaux comme un robot, pour 22 robots d'IA classés par usage, trouve leurs contradictions, et écrit la politique choisie par le propriétaire, vérifiée par le même évaluateur. | Aucun |
-| `seo-migration-redirects` | Plan de redirection construit à partir des deux inventaires, motifs de la refonte appris, chaînes et boucles détectées, export pour Redirection, Yoast, Rank Math, SEOPress, Apache ou Nginx, test de chaque saut sur le serveur avec lecture du noindex d'arrivée, tri des 404, preuve avant/après. | Aucun, davantage avec le plugin |
-| `wp-seo-plugin-driver` | Détecte Yoast, Rank Math, AIOSEO ou SEOPress depuis l'extérieur, photographie ce que chaque page affiche, transforme une liste de changements en l'appel que chaque extension documente, n'envoie rien sans accord, et prouve le résultat sur la page. | Une URL, puis un mot de passe d'application |
+| Skill | Ce qu'elle fait | Prérequis | Premier rapport en |
+|---|---|---|---|
+| `ai-bot-log-forensics` | Analyse les logs Apache, Nginx, Cloudflare et hébergeurs français. Vérifie chaque passage par DNS inverse puis direct, pour qu'aucun trafic usurpé n'entre dans un rapport client. Sépare le crawl d'entraînement de la récupération déclenchée par une vraie question. | Vos logs d'accès bruts sur 30 jours. 15 minutes pour constituer le fichier de plages d'IP, ou rien du tout avec `shared/ranges.json` | 10 min |
+| `ai-citability-audit` | Découpe la page en passages et note chacun sur 100 selon neuf critères observables. Réécrit les cinq plus faibles, avec l'avant et l'après. | Une URL publique, rien d'autre | 2 min |
+| `geo-strategy-map` | Carte des prompts construite à partir de votre matière (Search Console, questions du support, forums), protocole de mesure reproductible, diagnostic d'entité, plan à 90 jours plafonné à douze actions. | Un relevé manuel sur 3 moteurs de réponse, environ une demi-journée. Le plan en dépend, il n'y a pas de raccourci | une demi-journée |
+| `seo-portfolio-report` | Reporting mensuel sur un portefeuille de sites, et la preuve d'impact que personne d'autre ne fait : avant/après avec groupe de contrôle, détection de rupture, double différence, et un refus de conclure quand la fenêtre est trop courte. | Vos exports Search Console, sur la période et sur la précédente | 30 min |
+| `ai-visibility-tracker` | Fréquence à laquelle ChatGPT, Perplexity, Gemini et Claude nomment la marque, avec un intervalle sur chaque taux, part de voix face aux concurrents, signal ou bruit entre deux mesures, et les sources qui répondent à la place de la marque quand elle est absente. | Un relevé à la main, vos propres clés d'API, un export d'outil, ou AVA sur le plugin payant | 20 min avec les clés |
+| `llmstxt-governance` | Lit robots.txt, llms.txt et les nouveaux signaux comme un robot, pour 22 robots d'IA classés par usage, trouve leurs contradictions, et écrit la politique choisie par le propriétaire, vérifiée par le même évaluateur. | Une URL publique | 5 min |
+| `seo-migration-redirects` | Plan de redirection construit à partir des deux inventaires, motifs de la refonte appris, chaînes et boucles détectées, export pour Redirection, Yoast, Rank Math, SEOPress, Apache ou Nginx, test de chaque saut sur le serveur avec lecture du noindex d'arrivée, tri des 404, preuve avant/après. | L'ancien sitemap ou un export Search Console, et le sitemap de préproduction | 30 min |
+| `wp-seo-plugin-driver` | Détecte Yoast, Rank Math, AIOSEO ou SEOPress depuis l'extérieur, photographie ce que chaque page affiche, transforme une liste de changements en l'appel que chaque extension documente, n'envoie rien sans accord, et prouve le résultat sur la page. | Une URL, puis un mot de passe d'application pour les modifications | 10 min |
+
+Chaque skill fonctionne sur n'importe quel site WordPress, avec ou sans notre
+extension. Trois en font davantage avec elle, aucune n'en a besoin. Aucune ne
+demande de compte chez nous ni de carte bancaire. Les deux qui peuvent utiliser
+des identifiants, vos propres clés d'API ou un mot de passe d'application sur
+votre site, les lisent dans votre environnement et ne les écrivent nulle part.
 
 ## Installation
 
